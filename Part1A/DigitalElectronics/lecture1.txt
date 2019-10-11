@@ -4,7 +4,34 @@ Abstraction:
 - For example, a chain of abstraction may be:
   Electrons -> Transistors -> Logic Gates -> Adder/Memory etc. -> Data Paths/Controllers -> Registers/Instructions -> Programming Languages -> Programs
 
+Architecture:
+- architecture is defined by instruction set and registers.
+
+
 ==Combinational Logic==
 
+--Logic Gates--
+- Logic/binary/Boolean variables are the same thing.
+- Use of only 2 values reduces disruption of electrical noise.
+- circle on the output of a gate means NOT.
+- in practice, it is easier to build NAND/NOR gates rather than AND/OR gates.
+- logical operations can be represented using symbols, truth tables, or boolean algebra
+
+-- Boolean Algebra --
+- AND is represented by "."
+- OR is represented by "+"
+- NOT is represented by a bar above.
+
+- Boolean Algebra is commutative, associative, distributive, and absorptive.
+- commutative:
+  a+b = b+a
+- associative:
+  (a+b)+c = a+(b+c)
+- distributive:
+  a.(b+c) = a.b + a.c
+- absorptive:
+  a+(a.b) = a, a.(a+b) = a
+
+- when simplifying boolean expressions, expand all 
 
 ==Sequential Logic==
