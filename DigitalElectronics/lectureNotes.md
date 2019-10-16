@@ -184,27 +184,27 @@ So, the simplified function is `f = !x + y.z`, as before.
   | ab \ cd | 00 | 01 | 11 | 10 |
   | ------- | -- | -- | -- | -- |
   | **00**  | 1  | 1  | 1  | 1  |
-  | **01**  | 0  | 0  | 0  | 0  |
-  | **11**  | 0  | 0  | 0  | 0  |
+  | **01**  |    |    |    |    |
+  | **11**  |    |    |    |    |
   | **10**  | 1  | 1  | 1  | 1  |
 
 2. Plot `f = !b.!d`.
 
   | ab \ cd | 00 | 01 | 11 | 10 |
   | ------- | -- | -- | -- | -- |
-  | **00**  | 1  | 0  | 0  | 1  |
-  | **01**  | 0  | 0  | 0  | 0  |
-  | **11**  | 0  | 0  | 0  | 0  |
-  | **10**  | 1  | 0  | 0  | 1  |
+  | **00**  | 1  |    |    | 1  |
+  | **01**  |    |    |    |    |
+  | **11**  |    |    |    |    |
+  | **10**  | 1  |    |    | 1  |
 
 3. Simplify `f = !a.b.!d + b.c.d + !a.b.!c.d + c.d`.
 
   | ab \ cd | 00 | 01 | 11 | 10 |
   | ------- | -- | -- | -- | -- |
-  | **00**  | 0  | 0  | 1  | 0  |
+  | **00**  |    |    | 1  |    |
   | **01**  | 1  | 1  | 1  | 1  |
-  | **11**  | 0  | 0  | 1  | 0  |
-  | **10**  | 0  | 0  | 1  | 0  |
+  | **11**  |    |    | 1  |    |
+  | **10**  |    |    | 1  |    |
 
   So
   ```
@@ -252,5 +252,119 @@ f = !a.d + c.d
 ```
 
 ## Quine-McCluskey (Q-M) Method
-Use the QM implication table to find the prime implicants
-Then the minimum cover set is found using the prime implicant chart.
+
+The Q-M method has 2 parts:
+
+1. Use the *QM implication table* to find all the prime implicants.
+
+2. Use the *Prime implicant chart* to find the minimum cover set.
+
+For example, using 4 variables:
+```
+Minterms:
+4, 5, 6, 8, 9, 10, 13
+
+Don't care:
+0, 7, 15
+```
+
+To begin, list groups of minterms and don't cares, grouped by number of 1s, like so:
+```
+[0]
+0000
+
+[1]
+0100
+1000
+
+[2]
+0101
+0110
+1001
+1010
+
+[3]
+0111
+1101
+
+[4]
+1111
+```
+
+Next, apply the *uniting theorem*.
+
+### Uniting theorem
+
+1. Compare elements in group `[0]` with all elements in group `[1]`. If they differ by a single bit, it means the terms are adjacent.
+
+2. Adjacent terms are placed in a second column, with the bit that differs replaced by a `-`. Terms in the first column that are adjacent are marked with a `/`, because they are *not* prime implicants. Any remaining terms are marked with a `*`, because they *are* prime implicants.
+
+```
+[0]     [0]
+0000/   0-00
+        -000
+[1]
+0100/
+1000/   
+
+[2]
+0101
+0110
+1001
+1010
+
+[3]
+0111
+1101
+
+[4]
+1111
+```
+
+3. Repeat steps 1 and 2 for each pair of successive groups in the first column.
+
+```
+[0]     [0]
+0000/   0-00
+        -000
+[1]     
+0100/   [1]
+1000/   010-
+        01-0
+[2]     100-
+0101/   10-0
+0110/    
+1001/   [2]
+1010/   01-1
+        -101
+[3]     011-
+0111/   1-01
+1101/   
+        [3]
+[4]     -111
+1111/   11-1
+```
+
+4. Repeat steps 1, 2, 3 for each new column generated.
+
+  ```
+  [0]     [0]     [1]
+  0000/   0-00*   01--*
+          -000*   
+  [1]             [2]
+  0100/   [1]     -1-1*
+  1000/   010-/
+          01-0/
+  [2]     100-*
+  0101/   10-0*
+  0110/    
+  1001/   [2]
+  1010/   01-1/
+          -101/
+  [3]     011-/
+  0111/   1-01*
+  1101/   
+          [3]
+  [4]     -111/
+  1111/   11-1/
+  ```
