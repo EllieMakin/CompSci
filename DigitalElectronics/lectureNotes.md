@@ -64,12 +64,12 @@ x.y + !y.z + x.z + x.y.z
 ### Proof
 1. For two variables, DeMorgan's Theorem can be proved using a truth table:
 
-  | a | b | !(a + b) | !a . !b |
-  | - | - | -------- | ------- |
-  | 0 | 0 | 1        | 1       |
-  | 0 | 1 | 0        | 0       |
-  | 1 | 0 | 0        | 0       |
-  | 1 | 1 | 0        | 0       |
+    | a | b | !(a + b) | !a . !b |
+    | - | - | -------- | ------- |
+    | 0 | 0 | 1        | 1       |
+    | 0 | 1 | 0        | 0       |
+    | 1 | 0 | 0        | 0       |
+    | 1 | 1 | 0        | 0       |
 
 2. Then the rest can be proved by induction:
 ```
@@ -181,35 +181,35 @@ So, the simplified function is `f = !x + y.z`, as before.
 
 1. Plot `f = !b`.
 
-  | ab \ cd | 00 | 01 | 11 | 10 |
-  | ------- | -- | -- | -- | -- |
-  | **00**  | 1  | 1  | 1  | 1  |
-  | **01**  | 0  | 0  | 0  | 0  |
-  | **11**  | 0  | 0  | 0  | 0  |
-  | **10**  | 1  | 1  | 1  | 1  |
+    | ab \ cd | 00 | 01 | 11 | 10 |
+    | ------- | -- | -- | -- | -- |
+    | **00**  | 1  | 1  | 1  | 1  |
+    | **01**  |    |    |    |    |
+    | **11**  |    |    |    |    |
+    | **10**  | 1  | 1  | 1  | 1  |
 
 2. Plot `f = !b.!d`.
 
-  | ab \ cd | 00 | 01 | 11 | 10 |
-  | ------- | -- | -- | -- | -- |
-  | **00**  | 1  | 0  | 0  | 1  |
-  | **01**  | 0  | 0  | 0  | 0  |
-  | **11**  | 0  | 0  | 0  | 0  |
-  | **10**  | 1  | 0  | 0  | 1  |
+    | ab \ cd | 00 | 01 | 11 | 10 |
+    | ------- | -- | -- | -- | -- |
+    | **00**  | 1  |    |    | 1  |
+    | **01**  |    |    |    |    |
+    | **11**  |    |    |    |    |
+    | **10**  | 1  |    |    | 1  |
 
 3. Simplify `f = !a.b.!d + b.c.d + !a.b.!c.d + c.d`.
 
-  | ab \ cd | 00 | 01 | 11 | 10 |
-  | ------- | -- | -- | -- | -- |
-  | **00**  | 0  | 0  | 1  | 0  |
-  | **01**  | 1  | 1  | 1  | 1  |
-  | **11**  | 0  | 0  | 1  | 0  |
-  | **10**  | 0  | 0  | 1  | 0  |
+    | ab \ cd | 00 | 01 | 11 | 10 |
+    | ------- | -- | -- | -- | -- |
+    | **00**  |    |    | 1  |    |
+    | **01**  | 1  | 1  | 1  | 1  |
+    | **11**  |    |    | 1  |    |
+    | **10**  |    |    | 1  |    |
 
-  So
-  ```
-  f = !a.b + c.d
-  ```
+    So
+    ```
+    f = !a.b + c.d
+    ```
 ### POS Simplification
 If we want the result is POS form, then we simply use maxterms instead of minterms, using a similar method as we did with maxterms above (we find the complement of the function first and then use DeMorgan).
 
@@ -217,21 +217,21 @@ If we want the result is POS form, then we simply use maxterms instead of minter
 
 1. Simplify `f = !a.b + b.!c.!d`.
 
-  | ab \ cd | 00 | 01 | 11 | 10 |
-  | ------- | -- | -- | -- | -- |
-  | **00**  | 0  | 0  | 0  | 0  |
-  | **01**  |    |    |    |    |
-  | **11**  |    | 0  | 0  | 0  |
-  | **10**  | 0  | 0  | 0  | 0  |
+    | ab \ cd | 00 | 01 | 11 | 10 |
+    | ------- | -- | -- | -- | -- |
+    | **00**  | 0  | 0  | 0  | 0  |
+    | **01**  |    |    |    |    |
+    | **11**  |    | 0  | 0  | 0  |
+    | **10**  | 0  | 0  | 0  | 0  |
 
-  This can be grouped like so:
-  ```
-  !f = !b + a.c + a.d
-  ```
-  And applying DeMorgan's:
-  ```
-  f = b.(!a + !c).(!a + !d)
-  ```
+    This can be grouped like so:
+    ```
+    !f = !b + a.c + a.d
+    ```
+    And applying DeMorgan's:
+    ```
+    f = b.(!a + !c).(!a + !d)
+    ```
 
 ### "Don't care" conditions
 
@@ -252,5 +252,159 @@ f = !a.d + c.d
 ```
 
 ## Quine-McCluskey (Q-M) Method
-Use the QM implication table to find the prime implicants
-Then the minimum cover set is found using the prime implicant chart.
+
+The Q-M method has 2 parts:
+
+1. Use a *QM implication table* to find all the prime implicants.
+
+2. Use a *Prime implicant chart* to find the minimum cover set.
+
+In the following example, we are using 4 variables:
+```
+Minterms:
+4, 5, 6, 8, 9, 10, 13
+
+Don't care:
+0, 7, 15
+```
+
+### Implication table
+
+To begin, list groups of minterms and don't cares, grouped by number of 1s, like so:
+```
+[0]
+0000
+
+[1]
+0100
+1000
+
+[2]
+0101
+0110
+1001
+1010
+
+[3]
+0111
+1101
+
+[4]
+1111
+```
+
+Next, apply the *uniting theorem*.
+
+### Uniting theorem
+
+1. Compare elements in group `[0]` with all elements in group `[1]`. If they differ by a single bit, it means the terms are adjacent.
+
+2. Adjacent terms are placed in a second column, with the bit that differs replaced by a `-`. Terms in the first column that are adjacent are marked with a `/`, because they are *not* prime implicants. Any remaining terms are marked with a `*`, because they *are* prime implicants.
+
+    ```
+    [0]     [0]
+    0000/   0-00
+            -000
+    [1]
+    0100/
+    1000/   
+
+    [2]
+    0101
+    0110
+    1001
+    1010
+
+    [3]
+    0111
+    1101
+
+    [4]
+    1111
+    ```
+
+3. Repeat steps 1 and 2 for each pair of successive groups in the first column.
+
+    ```
+    [0]     [0]
+    0000/   0-00
+            -000
+    [1]     
+    0100/   [1]
+    1000/   010-
+            01-0
+    [2]     100-
+    0101/   10-0
+    0110/    
+    1001/   [2]
+    1010/   01-1
+            -101
+    [3]     011-
+    0111/   1-01
+    1101/   
+            [3]
+    [4]     -111
+    1111/   11-1
+    ```
+
+4. Repeat steps 1, 2, 3 for each new column generated.
+
+    ```
+    [0]     [0]     [1]
+    0000/   0-00*   01--*
+            -000*   
+    [1]             [2]
+    0100/   [1]     -1-1*
+    1000/   010-/
+            01-0/
+    [2]     100-*
+    0101/   10-0*
+    0110/    
+    1001/   [2]
+    1010/   01-1/
+            -101/
+    [3]     011-/
+    0111/   1-01*
+    1101/   
+            [3]
+    [4]     -111/
+    1111/   11-1/
+    ```
+
+After this process, we can see that the prime implicants are:
+
+```
+0-00
+-000
+100-
+10-0
+1-01
+01--
+-1-1
+```
+### Prime implicant chart
+
+We now need to find the smallest number of prime implicants that will cover the function. We will use the *prime implicant chart*, which is organised like this:
+
+|          | 4 | 5 | 6 | 8 | 9 | 10 | 13 |
+| -------- | - | - | - | - | - | -- | -- |
+| **0-00** | x |   |   |   |   |    |    |
+| **-000** |   |   |   | x |   |    |    |
+| **100-** |   |   |   | x | x |    |    |
+| **10-0** |   |   |   | x |   | x  |    |
+| **1-01** |   |   |   |   | x |    | x  |
+| **01--** | x | x | x |   |   |    |    |
+| **-1-1** |   | x |   |   |   |    | x  |
+
+now we look for *essential* prime implicants, which are indicated by only one `x` in any column (this means there is a minterm covered by only one prime implicant). In this case, this is column `6` and column `10`, which means `01--` and `10-0` are essential.
+
+These essential prime implicants already cover some other minterms, in this case `10-0` covers `8`, and `01--` covers `4`,`5`. This leaves only `9` and `13`, which can be covered simply by `1-01`.
+
+So, our final minimum cover is:
+```
+01--    ->  !a.b
+10-0    ->  a.!b.!d
+1-01    ->  a.!c.d
+
+f = !a.b + a.!b.!d + a.!c.d
+```
