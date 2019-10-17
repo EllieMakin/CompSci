@@ -522,6 +522,6 @@ P = p[3].p[2].p[1].p[0]
 ```
 which can be evaluated quickly.
 
-We could generate all carries withing an adder block using the above method, however to reduce complexity we can implement 4-bit adder blocks using fast carry generation, and string them together as before. Withing eachh 4-bit adder, conventional ripple carry addition is used.
+We could generate all carries withing an adder block using the above method, however to reduce complexity we can implement 4-bit adder blocks using fast carry generation, and string them together as before. Withing each 4-bit adder, conventional ripple carry addition is used.
 
 ![fastCarryChain](notesImages/fastCarryChain.png)
