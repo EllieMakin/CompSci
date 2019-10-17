@@ -49,10 +49,10 @@ When simplifying Boolean expressions, it helps to expand all terms to include al
 Simplify `x.y + !y.z + x.z + x.y.z`.
 ```
 x.y + !y.z + x.z + x.y.z
-= (x.y.z + x.y.!z) + (x.!y.z + !x.!y.z) + (x.y.z + x.!y.z) + (x.y.z)
-= x.y.z + x.y.!z + x.!y.z + !x.!y.z
-= x.y.(z + !z) + !y.z.(x + !x)
-= x.y + !y.z
+    = (x.y.z + x.y.!z) + (x.!y.z + !x.!y.z) + (x.y.z + x.!y.z) + (x.y.z)
+    = x.y.z + x.y.!z + x.!y.z + !x.!y.z
+    = x.y.(z + !z) + !y.z.(x + !x)
+    = x.y + !y.z
 ```
 
 ## DeMorgan's Theorem
@@ -79,22 +79,22 @@ x.y + !y.z + x.z + x.y.z
 ### Examples
 1. Simplify `a.!b + a.!(b + c) + b.!(b + c)`
 ```
-a.!b + a.!(b + c) + b.!(b + c)
-= a.!b + a.!b.!c + b.!b.!c
-= a.!b + a.!b.!c
-= a.!b
+    a.!b + a.!(b + c) + b.!(b + c)
+    = a.!b + a.!b.!c + b.!b.!c
+    = a.!b + a.!b.!c
+    = a.!b
 ```
 2. Simplify `(a.b.(c + !(b.d)) + !(a.b)).c.d`
 ```
 (a.b.(c + !(b.d)) + !(a.b)).c.d
-= (a.b.(c + !b + !d)) + !a + !b).c.d
-= (a.b.c + a.b.!b + a.b.!d + !a + !b).c.d
-= (a.b.c + a.b.!d + !a + !b).c.d
-= a.b.c.d + a.b.c.!d.d + !a.c.d + !b.c.d
-= a.b.c.d + !a.c.d + !b.c.d
-= c.d.(a.b + !a + !b)
-= c.d.(a.b + !(a.b))
-= c.d
+    = (a.b.(c + !b + !d)) + !a + !b).c.d
+    = (a.b.c + a.b.!b + a.b.!d + !a + !b).c.d
+    = (a.b.c + a.b.!d + !a + !b).c.d
+    = a.b.c.d + a.b.c.!d.d + !a.c.d + !b.c.d
+    = a.b.c.d + !a.c.d + !b.c.d
+    = c.d.(a.b + !a + !b)
+    = c.d.(a.b + !(a.b))
+    = c.d
 ```
 
 ### DeMorgan using gates
@@ -408,3 +408,120 @@ So, our final minimum cover is:
 
 f = !a.b + a.!b.!d + a.!c.d
 ```
+
+## Binary Adders
+
+### Half adder
+
+Adds together two single bit binary numbers `a` and `b` (**without** carry input). The truth table for a half adder is this:
+
+| a | b | sum | cOut |
+| - | - | --- | ---- |
+| 0 | 0 | 0   | 0    |
+| 0 | 1 | 1   | 0    |
+| 1 | 0 | 1   | 0    |
+| 1 | 1 | 0   | 1    |
+
+By inspection, we can deduce
+```
+sum = !a.b + a.!b = a XOR b
+
+cOut = a.b
+```
+
+### Full adder
+
+Adds together two single bit binary numbers `a` and `b` (**with** carry input). The truth table for a full adder is this:
+
+| a | b | cIn | sum | cOut |
+| - | - | --- | --- | ---- |
+| 0 | 0 | 0   | 0   | 0    |
+| 0 | 1 | 0   | 1   | 0    |
+| 1 | 0 | 0   | 1   | 0    |
+| 1 | 1 | 0   | 0   | 1    |
+| 0 | 0 | 1   | 1   | 0    |
+| 0 | 1 | 1   | 0   | 1    |
+| 1 | 0 | 1   | 0   | 1    |
+| 1 | 1 | 1   | 1   | 1    |
+
+```
+sum = cIn XOR a XOR b
+
+cOut = a.b + cIn.(a + b)
+    = a.b + cIn.(a XOR b)
+```
+
+### Ripple carry Adder
+
+A ripple carry adder is just *n* full adders cascaded together. For example, a 4-bit adder looks like this:
+
+![4bitRippleCarry](notesImages/4bitRippleCarry.png)
+
+This can also be used to do subtraction, if we complement `b` and set `c0 =  1`.
+
+The ripple carry adder introduces delays, since the carry signal must pass down the chain of adders before the full result can be calculated. This can be avoided by generating the carry signals before the addition, in a separate unit, like this:
+
+![4bitFastCarry](notesImages/4bitFastCarry.png)
+
+In order to derive the logic for the *fast carry* system, we can take a closer look at how the carry signal is handled in a full adder. The rows in the truth table can be separated into 3 groups, depending on how the `cIn` signal relates to the `cOut` signal:
+
+1. kill - `cOut` is always `0`, regardless of `cIn`
+
+2. propagate - `cOut` is the same as `cIn`
+
+3. generate - `cOut` is always `1`, regardless of `cIn`.
+
+Here they are listed:
+
+| a | b | cIn | cOut | category  |
+| - | - | --- | ---- | --------- |
+| 0 | 0 | 0   | 0    | kill      |
+| 0 | 0 | 1   | 0    | kill      |
+| 0 | 1 | 0   | 0    | propagate |
+| 0 | 1 | 1   | 1    | propagate |
+| 1 | 0 | 0   | 0    | propagate |
+| 1 | 0 | 1   | 1    | propagate |
+| 1 | 1 | 0   | 1    | generate  |
+| 1 | 1 | 1   | 1    | generate  |
+
+By observing the values of `a` and `b` for each category, we can derive variables that tell us if the operation is in each category, and start to derive the logic for the fast carry system:
+```
+k = !a.!b       (kill)
+p = a XOR b     (propagate)
+g = a.b         (generate)
+
+Also from before, we have
+cOut = a.b + cIn.(a XOR b)
+OR
+c[i+1] = a[i].b[i] + c[i].(a[i] XOR b[i])
+
+
+So,
+c[i+1] = g[i] + c[i].p[i]
+
+c[i+2] = g[i+1] + c[i+1].p[i+1]
+    = g[i+1] + p[i+1].(g[i] + c[i].p[i])
+    = g[i+1] + p[i+1].g[i] + p[i+1].p[i].c[i]
+
+c[i+3] = g[i+2] + c[i+2].p[i+2]
+    = g[i+2] + p[i+2].(g[i+1] + p[i+1].g[i] + p[i+1].p[i].c[i])
+    = g[i+2] + p[i+2].(g[i+1] + p[i+1].g[i]) + p[i+2].p[i+1].p[i].c[i]
+
+c[i+4] = g[i+3] + c[i+3].p[i+3]
+    = g[i+3] + p[i+3].(g[i+2] + p[i+2].(g[i+1] + p[i+1].g[i]) + p[i+2].p[i+1].p[i].c[i])
+    = g[i+3] + p[i+3].(g[i+2] + p[i+2].(g[i+1] + p[i+1].g[i])) + p[i+3].p[i+2].p[i+1].p[i].c[i]
+```
+
+So, to generate `c[4]`:
+```
+c[4] = g[3] + p[3].(g[2] + p[2].(g[1] + p[1].g[0])) + p[3].p[2].p[1].p[0].c[0]
+    = G + P.c[0]
+where
+G = g[3] + p[3].(g[2] + p[2].(g[1] + p[1].g[0]))
+P = p[3].p[2].p[1].p[0]
+```
+which can be evaluated quickly.
+
+We could generate all carries withing an adder block using the above method, however to reduce complexity we can implement 4-bit adder blocks using fast carry generation, and string them together as before. Withing eachh 4-bit adder, conventional ripple carry addition is used.
+
+![fastCarryChain](notesImages/fastCarryChain.png)
