@@ -525,3 +525,170 @@ which can be evaluated quickly.
 We could generate all carries withing an adder block using the above method, however to reduce complexity we can implement 4-bit adder blocks using fast carry generation, and string them together as before. Withing each 4-bit adder, conventional ripple carry addition is used.
 
 ![fastCarryChain](notesImages/fastCarryChain.png)
+
+## Multilevel logic
+
+Multilevel logic refers to logic expressions with more than 2 levels of operations, unlike SOP or POS expressions, for example, the full adder is a multilevel logic unit.
+
+In general, all boolean expressions can be simplified to 2-level logic expressions, either in SOP or POS form. However, this is not always a good idea in practice, because of a few reasons:
+
+- Commercially available logic gates are usually only available with 2 or 3 inputs.
+
+- Sytem composition from sub-systems reduces design complexity, e.g. a ripple adder made from full adders. (Imagine an entire computer if it was built from 2-level logic...!)
+
+- Multilevel logic allows boolean optimisation of multiple outputs, e.g. eliminating common sub-expressions.
+
+###  Common expression elimination
+
+Consider the following minimised SOP expression:
+
+```
+z = a.d.f + a.e.f + b.d.f + b.e.f + c.d.f + c.e.f + g
+```
+
+This expression contains 19 literals, and would require six 3-input `AND` gates, and one 7-input `OR` gate - a total of 7 gates when implemented with 2-level logic.
+
+We can recursively factor out common literals:
+```
+z = a.d.f + a.e.f + b.d.f + b.e.f + c.d.f + c.e.f + g
+    = (a.d + a.e + b.d + b.e + c.d + c.e).f + g
+    = ((a + b + c).d + (a + b + c).e).f + g
+    = (a + b + c).(d + e).f + g
+
+z = x.y.z + g
+
+where x = a + b + c, and y = d + e
+```
+This new 3-level form contains only 9 literals, and can be implemented with only 4 gates.
+
+## Gate propagation delay
+
+Because logic gates are implemented with physical electronic components, they have a finite delay before the output of a gate responds to a change in its inputs, known as *propagation delay*.
+
+The cumulative delay of a number of gates in cascade can increase the time before the output of a combinatorial logic circuit becomes valid, for example, in the ripple carry adder, the sum will not be valid until the carry signal has rippled through all of the full adders in the chain.
+
+As well as slowing down the operation of combinatorial logic circuits, gate delay can result in what are called *hazards* at the output.
+
+### Hazards
+
+Hazards are classified into two types:
+
+1. Static hazards - The output undergoes a momnetary transition when one input changes when it is supposed to remain unchanged.
+
+2. Dynamic hazards - The output changes more than once when it is supposed to change just once.
+
+To visually represent hazards, we can use a *timing diagram*, which shows the logic level of the output over time. Within static hazards, there are 2 types:
+
+![staticHazardTypes](notesImages/staticHazardTypes.png)
+
+Note that the timing diagrams make a few simplifications, namely:
+
+- The signal is de-noised to produce 2 clean levels
+
+- Transitions between logic levels are not actually instantaneous, though they are represented as if they are.
+
+The timing diagram for a dynamic hazard looks something like this:
+
+![dynamicHazards](notesImages/dynamicHazards.png)
+
+A simple example of a circuit that would produce a static hazard is a 2-to-1 multiplexer:
+
+![static1example](notesImages/static1example.png)
+
+This causes a static 1 hazard if `x = z = 1`, and `y` is switched from `1` to `0`, because of the delay in the `NOT` gate.
+
+### Hazard removal
+
+To remove a static 1 hazard, we can use a K-map to find another term which overlaps the essential terms. for example, in the above case, the boolean expression is `w = x.y + z.!y`:
+
+| x \ yz | 00 | 01 | 11 | 10 |
+| ------ | -- | -- | -- | -- |
+| **0**  |    | 1  |    |    |
+| **1**  |    | 1  | 1  | 1  |
+
+We can add the algebraically unnecessary term `x.z`, in order to create a bridge between the essential terms in the K-map. The logic circuit then becomes:
+
+![fixedHazard](notesImages/fixedHazard.png)
+
+To remove a static 0 hazard, just create a bridging term for the `0`s in the K-map, rather than the `1`s. Removing dynamic hazards is not covered in the course.
+
+## Multiplexers (mux)
+
+A mux selects one output from several possible inputs, chosen by control inputs. If the input to a circuit can come from several places a Mux is one way to funnel the multiple sources selectively to the single ouput. A 2-to-1 mux is shown above in the hazards section, but any number of inputs is possible. A mux is typically drawn like this:
+
+![muxes](notesImages/muxes.png)
+
+A mux can be used to implement combinatorial logic functions, for example, the expression `f = !x.!y.!z + !x.y.!z + x.y.!z + x.y.z` (written in DNF form) can be implemented using the following mux:
+
+![logicalMux](notesImages/logicalMux.png)
+
+This can be simplified to a 4-to-1 mux by observing the truth table, and noting that the output `f` will always correspond to one of `z`, `!z`, `0`, or `1`:
+
+| x | y | z | f | corresponds to |
+| - | - | - | - | -------------- |
+| 0 | 0 | 0 | 1 | `!z`           |
+| 0 | 0 | 1 | 0 | `!z`           |
+| 0 | 1 | 0 | 1 | `!z`           |
+| 0 | 1 | 1 | 0 | `!z`           |
+| 1 | 0 | 0 | 0 | `0`            |
+| 1 | 0 | 1 | 0 | `0`            |
+| 1 | 1 | 0 | 1 | `1`            |
+| 1 | 1 | 1 | 1 | `1`            |
+
+This leads to the 4-input mux:
+
+![simplerLogicalMux](notesImages/simplerLogicalMux.png)
+
+### Demultiplexers (demux)
+
+A demux is the opposite of a mux - a single input is directed to one of several outputs, chosen by control inputs.
+
+A similar function is a *decoder*, which is like a demux, but the input is always 1. This could be used, for example, to activate 1 of *n* logic subsystems.
+
+We can see that each output of a 1-of-*n* decoder will correspond to a given minterm of the inputs. As a result, any logical expression in DNF form can be created by `OR`ing together the outputs which correspond to the required minterms:
+
+![DNFDecoder](notesImages/DNFDecoder.png)
+
+## Read Only Memory (ROM)
+
+A ROM is a data storage device, usually only written into once, typically at manufacture. The data can be read at will, and the ROM is essentially a lookup table, where a group of *n* input lines is used to specify the address of *m*-bit data words. If `n = 4`, the ROM has `2^4 = 16` possible inputs; if `m = 4` then each location can store a 4-bit word. The total number of bits stored in the ROM is `m * 2^n`, so in this (small) example the total number of bits is 64.
+
+Logical functions can be implemented in ROM simply by writing the minterms which correspond to the correct address inputs. If multiple boolean functions are to be implemented, the different outputs can just be written into different bytes in the word at each address.
+
+This is reasonably efficient if lots of outputs need to be 1, but can be quite inefficient with only a few non-zero entries if the number of minterms in the function to be implemented is small. Devices which can overcome these problems are known as *programmable logic arrays*.
+
+## Programmable logic array (PLA)
+
+In PLAs, only the required minterms are generated using a separate AND plane. The outputs from this plane are `OR`ed together in a separate `OR` plane to produce the final outputs. The basic structure is this:
+
+![basicPLA](notesImages/basicPLA.png)
+
+This framework can then be programmed by selectively removing connections in the `AND` and `OR` planes to leave the required logic, either using fuses or memory bits.
+
+In a PLA, outputs from the `AND` plane are available to all `OR` gates to give the final output. Another structure known as *Programmable array logic* (PAL) (terrible naming system) does not have a programmable `OR` array, so outputs from the AND array cannot be shared among the OR gates. This is a simpler structure, but less efficient:
+
+![basicPA:](notesImages/basicPAL.png)
+
+## Other Memory devices
+
+Non-volatile storage is offered by ROMs and other technologies like FLASH. Volatile storage is offered by *Static Random Access Memory* (SRAM) = once power is removed, the data is lost.
+
+The CPU often makes use of busses (a bunch of wires in parallel) to access external memory devices. The *address bus* is used to specify the memory location that is being read or written, and the *data bus* conveys the data to and from that location.
+
+### Bus contention
+
+More than one memory device will often be connected to the same data bus. In this case, if the outputs from each memory device were connected to the bus at the same time, the data read would be invalid. To solve this issue, we can use *tristate buffers*.
+
+### Tristate Buffer
+
+A tristate buffer is used on the data output of the memory devices. In contrast to regular buffers which have only `0` or `1` as outputs, a tristate buffer also has a *high impedance* state, which will have no effect on any other data currently on the bus. Here is a diagram:
+
+![tristateBuffer](notesImages/tristateBuffer.png)
+
+Like `Output Enable` in the tristate buffer, there are other control signals provided:
+
+- Write enable (WE) - Determines whether data is written or read (not needed on a ROM)
+
+- Chip select (CS) - determines if the chip is activated or not.
+
+These signals may be active low or high, depending on the device.
