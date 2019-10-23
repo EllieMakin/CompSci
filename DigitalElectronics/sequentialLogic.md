@@ -53,4 +53,22 @@ The state transition table for the transparent D latch is as follows:
 | 1    | 0   | 0    |
 | 1    | 1   | 1    |
 
-The transparent D latch is a *level-triggered* device, meaning it exhibits transparent behaviour when `EN = 1`
+The transparent D latch is a *level-triggered* device, meaning it exhibits transparent behaviour when `EN = 1`, but it is often simpler to design sequential circuits if they are *edge-triggered*. We can achieve this kind of operation by combining 2 transparent D latches in a *master-slave* configuration:
+
+![masterSlaveDFlipFlop](notesImages/masterSlaveDFlipFlop.png)
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+## Counters
+
+### Ripple Counters
+
+A ripple counter can be made be cascading together negative edge triggered T-type FFs operating in ‘toggle’ mode:
+
+![rippleCounter](notesImages/rippleCounter.png)
+
+This is not a synchronous design, since the flip flops are not all connected to the same clock signal, rather each gets the signal from the previous one. This results in a timing diagram like this:
+
+![rippleCounterTiming](notesImages/rippleCounterTiming.png)
+
+As you can see, this design is not ideal, since the outputs do not change at the same time due to propagation delay - it takes a while for the outputs to become coherent. This propagation delay stacks between each stage, limiting the maximum clock speed that will prevent miscounting.

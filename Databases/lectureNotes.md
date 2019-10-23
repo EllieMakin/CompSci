@@ -31,3 +31,11 @@ ACID is a set of properties of database transactions intended to guarantee valid
 - **Durability** - If a transaction completes successfully, then its effects persist.
 
 ## Data Models
+
+This course will look at 3 data models:
+
+- Relational Model - Data is stored in tables. SQL is the main query language.
+- Graph-oriented Model - Data is stored as a graph (nodes and edges). Query languages tend to have “path-oriented” capabilities.
+- Aggregate-oriented Model - Also called document-oriented database. Optimised for read-oriented databases.
+
+The relational model has been the industry mainstay for the last 35 years.
