@@ -264,3 +264,83 @@ let rec selectionSort someList =
 The worst case for bubble sort would be if the list was reversed. This would require `n-1` swaps in order to place the first element correctly, `n-2` for the second, and so on, which has complexity `O(n^2)`.
 
 4. *Implement bubble sort (see previous exercise) using OCaml.*
+
+```
+let rec bubbleSort someList =
+    let rec bubblePass otherList =
+        match otherList with
+        | first :: second :: rest ->
+            if first > second then
+                second :: bubblePass (first :: rest)
+            else
+                first :: bubblePass (second :: rest)
+        | _ -> otherList
+    in
+        let passedList = bubblePass someList
+        in
+            if passedList = someList then
+                passedList
+            else
+                bubbleSort passedList
+```
+
+## Exercise 6
+
+1. *Give the declaration of an OCaml type for the days of the week. Comment on the practicality of such a type in a calendar application.*
+
+```
+type weekDay =
+    | Monday
+    | Tuesday
+    | Wednesday
+    | Thursday
+    | Friday
+    | Saturday
+    | Sunday
+```
+
+This type may be fairly practical in a calendar application, since the type definition will save space compared to string storage of days.
+
+2. *Write an OCaml function taking a binary tree labelled with integers and returning their sum.*
+
+```
+let rec sumTree someTree =
+    match someTree with
+    | Lf -> 0
+    | Br (vertex, tree1, tree2) ->
+        vertex + (sumTree tree1) + (sumTree tree2)
+```    
+
+3. *Using the definition of 'a tree from before: `type 'a tree = Lf | Br of 'a * 'a tree * 'a tree`, examine the following function declaration. What does `ftree (1, n)` accomplish?*
+
+    ```
+    let rec ftree k n =
+        if n = 0 then
+            Lf
+        else
+            Br (k, ftree (2 * k) (n - 1), ftree (2 * k + 1) (n - 1))
+    ```
+
+`ftree (1, n)` constructs a binary tree with `n` levels, which represents all binary nubers with `n` digits.
+
+4. *Give the declaration of an OCaml type for arithmetic expressions that have the following possibilities: real numbers, variables (represented by strings), or expressions of the form `−E, E+E, E×E`.*
+
+```
+type expression =
+    | Real of float
+    | Var of string
+    | Sub of expression
+    | Add of expression * expression
+    | Mult of expression * expression
+```
+
+5. *Continuing the previous exercise, write a function that evaluates an expression. If the expression contains any variables, your function should raise an exception indicating the variable name.*
+```
+let rec evaluate someExpression =
+    match someExpression with
+    | Real (value) -> value
+    | Var (name) -> raise (Failure name)
+    | Sub (a) -> 0.0 -. (evaluate a)
+    | Add (a, b) -> (evaluate a) +. (evaluate b)
+    | Mult (a, b) -> (evaluate a) *. (evaluate b)
+```    
