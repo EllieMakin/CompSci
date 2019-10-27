@@ -1,30 +1,27 @@
-let rec r1_encode someList =
-    match someList with
-    | [] -> []
-    | head :: tail -> (
-        match r1_encode tail with
-        | [] -> [(1, head)]
-        | (count, previous) :: rest ->
-            if head = previous then
-                (count + 1, previous) :: rest
-            else
-                (1, head) :: (count, previous) :: rest
-    )
+type 'a sequence =
+    | Nil
+    | Cons of 'a * (unit -> 'a sequence)
 ;;
 
-let rec r2_encode someList =
-    let rec addToEncoded element encodedList =
-        match encodedList with
-        | [] -> [(1, element)]
-        | (count, value) :: tail ->
-            if element = value then
-                (count + 1, value) :: tail
-            else
-                (count, value) :: addToEncoded element tail
-    in
-    match someList with
-    | [] -> []
-    | head :: tail -> (
-        addToEncoded head (r2_encode tail)
-    )
+let rec get n s =
+  if n = 0 then
+    []
+  else
+    match s with
+    | Nil -> []
+    | Cons (x, xf) -> x :: get (n-1) (xf ())
 ;;
+
+let rec zeroOnes x =
+    let rec next someList =
+        match someList with
+        | [] -> [0]
+        | [0] -> [1]
+
+        | [1] -> []
+
+        | 0 :: rest ->
+
+        | 1 :: rest ->
+    in
+    Cons (x, fun () -> zeroOnes (next x))

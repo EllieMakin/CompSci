@@ -20,11 +20,13 @@
     ```
     let compareYears year1 year2 =
         ((year2 + 50) mod 100) - ((year1 + 50) mod 100)
+    ;;
     ```
     *(b) add/subtract some given number of years from another year.*
     ```
     let addYears startYear nYears =
         (startYear + nYears) mod 100
+    ;;
     ```
 
 3. *Why would no experienced programmer write an expression of the form `if … then true else false`? What about expressions of the form `if … then false else true`?*
@@ -43,6 +45,7 @@ where `x` has type float. (It is essential to use repeated addition rather than 
 let rec addFloats x n =
     if n <= 0 then 0
     else x +. addFloats x (n-1)
+;;
 ```
 
 6. *Another example of the inaccuracy of floating-point arithmetic takes the golden ratio `𝜙 ≈ 1.618…` as its starting point: `𝛾[0] = (1 + sqrt(5))/2` and `𝛾[n+1] = 1/(𝛾[n] − 1)`.
@@ -52,6 +55,7 @@ In theory, it is easy to prove that `𝛾[n] = ⋯ = 𝛾[1] = 𝛾[0]` for all 
 let rec goldenFloat n =
     if n > 0 then 1.0 /. (goldenFloat (n-1) -. 1.0)
     else (1.0 +. (sqrt 5.0)) /. 2.0
+;;
 ```
 
 ## Exercise 2
@@ -66,6 +70,7 @@ let rec iterativePower base index product =
         iterativePower (base *. base) (index / 2) product
     else
         iterativePower (base *. base) (index / 2) (product *. base)
+;;
 ```
 
 2. *Add a column to the table of complexities from The Design and Analysis of Computer Algorithms with the heading 60 hours:*
@@ -102,6 +107,7 @@ let sumListRec someList =
     match someList with
     | [] -> 0
     | first :: rest -> first + sumListRec rest
+;;
 ```
 
 Iterative:
@@ -110,6 +116,7 @@ let sumListIter someList total =
     match someList with
     | [] -> total
     | first :: rest -> sumListIter rest (total + first)
+;;
 ```
 
 The iterative version is more efficient, because it does not have to store each of the items in `someList` on the stack - instead they are added as it goes.
@@ -122,6 +129,7 @@ let lastItem someList =
     | [] -> raise (Failure "There is no last item in an empty list")
     | only :: [] -> only
     | first :: rest -> lastItem rest
+;;
 ```
 The best this can be done is `O(n)`, because the list must be traversed in order to access the last item.
 
@@ -133,6 +141,7 @@ let rec getEvens someList =
     | [] -> []
     | only :: [] -> []
     | first :: second :: rest -> second :: getEvens rest
+;;
 ```
 
 4. *Consider the polymorphic types in these two function declarations:*
@@ -160,6 +169,7 @@ let tails someList =
     match someList with
     | [] -> [[]]
     | first :: rest -> (first :: rest) :: (tails rest)
+;;
 ```
 
 ## Exercise 4
@@ -184,6 +194,7 @@ let rec union list1 list2 =
                 union list1 rest
             else
                 union (first :: list1) rest
+;;
 ```
 
 2. *Code a function that takes a list of integers and returns two lists, the first consisting of all non-negative numbers found in the input and the second consisting of all the negative numbers.*
@@ -199,6 +210,7 @@ let rec separateNegatives someList =
                 (first :: negatives, nonNegatives)
             else
                 (negatives, first :: nonNegatives)
+;;
 ```
 
 3. *How does this version of zip differ from the one above?*
@@ -208,6 +220,7 @@ let rec separateNegatives someList =
         match xs, ys with
         | (x::xs, y::ys) -> (x, y) :: zip xs ys
         | ([], [])   -> []
+    ;;
     ```
 
 The base case in the 1st version uses a wildcard pattern, which implicitly will match `([], [])`, where the 2nd version explicitly matches this pattern.
@@ -257,6 +270,7 @@ let rec selectionSort someList =
             | [] -> []
             | smallest :: rest -> smallest :: (selectionSort rest)
         )
+;;
 ```
 
 3. *Another sorting algorithm (bubble sort) consists of looking at adjacent pairs of elements, exchanging them if they are out of order and repeating this process until no more exchanges are possible. State, with justification, the time complexity of this approach.*
@@ -282,6 +296,7 @@ let rec bubbleSort someList =
                 passedList
             else
                 bubbleSort passedList
+;;
 ```
 
 ## Exercise 6
@@ -297,6 +312,7 @@ type weekDay =
     | Friday
     | Saturday
     | Sunday
+;;
 ```
 
 This type may be fairly practical in a calendar application, since the type definition will save space compared to string storage of days.
@@ -309,6 +325,7 @@ let rec sumTree someTree =
     | Lf -> 0
     | Br (vertex, tree1, tree2) ->
         vertex + (sumTree tree1) + (sumTree tree2)
+;;
 ```    
 
 3. *Using the definition of 'a tree from before: `type 'a tree = Lf | Br of 'a * 'a tree * 'a tree`, examine the following function declaration. What does `ftree (1, n)` accomplish?*
@@ -319,9 +336,10 @@ let rec sumTree someTree =
             Lf
         else
             Br (k, ftree (2 * k) (n - 1), ftree (2 * k + 1) (n - 1))
+    ;;
     ```
 
-`ftree (1, n)` constructs a binary tree with `n` levels, which represents all binary nubers with `n` digits.
+`ftree (1, n)` constructs a binary tree with `n` levels, which represents all binary numbers with `n` digits.
 
 4. *Give the declaration of an OCaml type for arithmetic expressions that have the following possibilities: real numbers, variables (represented by strings), or expressions of the form `−E, E+E, E×E`.*
 
@@ -343,4 +361,214 @@ let rec evaluate someExpression =
     | Sub (a) -> 0.0 -. (evaluate a)
     | Add (a, b) -> (evaluate a) +. (evaluate b)
     | Mult (a, b) -> (evaluate a) *. (evaluate b)
+;;
 ```    
+
+## Excercise 7
+
+1. *Draw the binary search tree that arises from successively inserting the following pairs into the empty tree: `("Alice", 6)`, `("Tobias", 2)`, `("Gerald", 8)`, `("Lucy", 9)`. Then repeat this task using the order `("Gerald", 8)`, `("Alice", 6)`, `("Lucy", 9)`, `("Tobias", 2)`. Why are results different?*
+
+```
+1.
+("Alice", 6) -- ("Tobias", 2)
+                    |
+                ("Gerald", 8) -- ("Lucy", 9)
+
+2.
+("Gerald", 8) -- ("Lucy", 9) -- ("Tobias", 2)
+    |
+("Alice", 6)
+```
+The results are different because the tree fills from the top down, so if an element is added later it is likely to be lower in the tree than before.
+
+2. *Code an insertion function for binary search trees. It should resemble the existing `update` function except that it should raise the exception `Collision` if the item to be inserted is already present.*
+
+```
+exception Collision
+let rec insertToTree k v someTree =
+    match someTree with
+    | Lf -> Br ((k, v), Lf, Lf)
+    | Br ((a, x), t1, t2) ->
+        if k < a then
+            Br ((a, x), insertToTree k v t1, t2)
+        else if a < k then
+            Br ((a, x), t1, insertToTree k v t2)
+        else (* if a = k *)
+            raise Collision
+;;
+```
+
+3. *Continuing the previous exercise, it would be natural for exceptional `Collision` to return the value previously stored in the dictionary. Why is that goal difficult to achieve?*
+
+`type 'a tree` is polymorphic, so the type of the value in the dictionary is hard to retrieve.
+
+4. *Describe an algorithm for deleting an entry from a binary search tree. Comment on the suitability of your approach.*
+
+Recursively pass the requested entry down the correct branches until the item is reached, or the end of the tree is reached. In the first case, replace the item with the left branch, and insert each of the items in the right branch into it. In the latter case, just return Lf.
+
+5. *Code the delete function outlined in the previous exercise.*
+
+```
+(* This relies on the insertToTree function from before *)
+let deleteFromTree entry someTree =
+    let merge tree1 tree2 =
+        match tree1 with
+        | Lf -> tree2
+        | Br ((key, value), lowers, highers) ->
+            insertToTree key value (merge lowers (merge highers tree2))
+    in
+    match someTree with
+    | Lf -> Lf
+    | Br ((key, value), lowers, highers) ->
+        if entry < key then
+            Br((key, value), deleteFromTree entry lowers, highers)
+        else if entry > key then
+            Br((key, value), lowers, deleteFromTree entry highers)
+        else
+            merge lowers highers
+;;
+```
+
+6. *Show that the functions `preorder`, `inorder` and `postorder` all require `O(n^2)` time in the worst case, where `n` is the size of the tree.*
+
+Each of the three functions must be run on every item in the tree while traversing it, which means it runs `n` times. In addition to this, at each stage, the `@` operator is used, which runs in `O(n)` time, so the total complexity in each case is `O(n^2)`.
+
+7. *Show that the functions `preord`, `inord` and `postord` all take linear time in the size of the tree.*
+
+The new functions no longer use the `@` operator, instead constructing the list with the `::` operator for each element, which runs in `O(1)` time. This simplifies the total complexity to `O(n)`.
+
+8. *Write a function to remove the first element from a functional array. All the other elements are to have their subscripts reduced by one. The cost of this operation should be linear in the size of the array.*
+
+```
+let rec removeFirst someTree =
+    let rec merge tree1 tree2 =
+        match tree1 with
+        | Lf -> tree2
+        | Br ((key, value), lowers, highers) ->
+            insertToTree key value (merge lowers (merge highers tree2))
+    in
+    let rec decrementBranch otherTree =
+        match otherTree with
+        | Lf -> Lf
+        | Br((key, value), lowers, highers) ->
+            Br((key, value-1), decrementBranch lowers, decrementBranch highers)
+    in
+    match someTree with
+    | Lf -> Lf
+    | Br ((key, value), lowers, highers) ->
+        if 1 < key then
+            Br((key, value-1), removeFirst lowers, decrementBranch highers)
+        else if 1 > key then
+            Br((key, value-1), decrementBranch lowers, removeFirst highers)
+        else
+            merge (decrementBranch lowers) (decrementBranch highers)
+;;
+```
+
+## Exercise 8
+
+1. *What does the following function do, and what are its uses? `let sw f x y = f y x`*
+
+Applies the function `f` to variables `x` and `y` but with their order swapped. This could be partially applied and used with the map function in order to map over the first argument, rather than the second.
+
+2. *There are many ways of combining orderings. The lexicographic ordering uses two keys for comparisons. It is specified by `(x',y′) < (x,y) <=> x′ < x OR (x′ = x AND y′ < y)`. Write an OCaml function to lexicographically combine two orderings, supplied as functions. Explain how it allows function insort to sort a list of pairs.*
+
+```
+let isLessDouble isLess1 isLess2 double1 double2 =
+    match double1 with
+    | (x', y') ->
+        match double2 with
+        | (x, y) ->
+            isLess1 x' x || (x' = x && isLess2 y' y)
+;;
+```
+
+3. *Without using map write a function map2 such that map2 f is equivalent to map (map f). The obvious solution requires declaring two recursive functions. Try to get away with only one by exploiting nested pattern-matching.*
+
+```
+let rec map2 f = function
+    | [] -> []
+    | [] :: restLists ->
+        [] :: map2 f restLists
+    | (firstItem :: firstList) :: restLists -> (
+        match map2 f (firstList::restLists) with
+        | [] -> [[f firstItem]]
+        | firstMap::restMap -> (f firstItem :: firstMap) :: restMap
+    )
+;;
+```
+
+4. *The type `'a option`, declared below, can be viewed as a type of lists having at most one element. (It is typically used as an alternative to exceptions.) Declare an analogue of the function `map` for type `'a option.`* `type 'a option = None | Some of 'a`
+
+```
+let optionMap f = function
+    | None -> None
+    | Some (element) -> Some(f element)
+;;
+```
+
+5. *Recall the making change function of Lecture 4; Function `allc` applies the function `cons a c` to every element of a list. Eliminate it by declaring a curried cons function and applying `map`.*
+
+```
+let rec change till amt =
+    if amt = 0 then
+        [ [] ]
+    else
+        match till with
+        | [] -> []
+        | c::till ->
+            if amt < c then
+                change till amt
+            else
+                map (fun x -> c::x) (change (c::till) (amt - c)) @ change till amt
+;;
+```
+
+## Exercise 9
+
+1. *Code an analogue of map for sequences.*
+```
+let mapSequence f seq =
+    match seq with
+    | Nil -> Nil
+    | Cons (x, xf) ->
+        Cons(f x, fun () -> mapSequence f (xf ()))
+;;
+```
+
+2. *Consider the list function concat, which concatenates a list of lists to form a single list. Can it be generalised to concatenate a sequence of sequences? What can go wrong?*
+
+If any of the sequences are infinite, then any sequences that come after it will be lost. Also, if the sequences are finite, the generating function of the resulting sequence must encode the length of the sub-sequences somehow, which seems difficult.
+
+3. *Code a function to make change using lazy lists, delivering the sequence of all possible ways of making change. Using sequences allows us to compute solutions one at a time when there exists an astronomical number. Represent lists of coins using ordinary lists. (Hint: to benefit from laziness you may need to pass around the sequence of alternative solutions as a function of type unit -> (int list) seq.)*
+
+I don't understand this question.
+
+4. *A lazy binary tree is either empty or is a branch containing a label and two lazy binary trees, possibly to infinite depth. Present an OCaml datatype to represent lazy binary trees, along with a function that accepts a lazy binary tree and produces a lazy list that contains all of the tree’s labels. (Taken from the exam question 2008 Paper 1 Question 5.)*
+
+```
+let rec treeToList someTree =
+    let rec appendq xq yq =
+        match xq with
+        | Nil -> yq
+        | Cons (x, xf) ->
+            Cons(x, fun () -> appendq (xf ()) yq)
+    in
+    match someTree with
+    | Leaf -> Nil
+    | Branch (label, branch1, branch2) ->
+        appendq (appendq (treeToList (branch1 ())) (Cons (label, fun () -> Nil))) (treeToList (branch2 ()))
+;;
+```
+
+5. *Code the lazy list whose elements are all ordinary lists of zeroes and ones, namely `[]; [0]; [1]; [0; 0]; [0; 1]; [1; 0]; [1; 1]; [0; 0; 0];...`. (Taken from the exam question 2003 Paper 1 Question 5.)*
+
+```
+Can't do this.
+```
+
+6. *(Continuing the previous exercise.) A palindrome is a list that equals its own reverse. Code the lazy list whose elements are all palindromes of 0s and 1s, namely `[]; [0]; [1]; [0; 0]; [0; 0; 0]; [0; 1; 0]; [1; 1]; [1; 0; 1]; [1; 1; 1]; [0; 0; 0; 0]; ...`. You may take the reversal function `List.rev` as given.*
+
+```
+Can't do this either.
+```
