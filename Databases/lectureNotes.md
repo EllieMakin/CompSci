@@ -58,6 +58,16 @@ Types of anomalies that can arise due to data redundancy:
 
 - Update anomalies:  What if a director’s name is misspelled? We may update it correctly for one movie but not for another.
 
+### Read-optimised database
+
+Situations where you might use a read-oriented database:
+
+- Your data is seldom updated, but very often read.
+
+- Your read-oriented database can afford to be mildly out-of-date compared to the write-oriented database. Then consider periodically extracting snapshots of the write-oriented database into the read-oriented sytem.
+
+![readOrientedDatabase](notesImages/readOrientedDatabase.png)
+
 ## Entity Relationship Diagrams (ER Diagrams)
 
 Below is an example of an ER diagram.
@@ -323,3 +333,17 @@ Suppose `R` is a binary relation over `S`: `R⊆S×S`. The *transitive closure* 
 ![transitiveClosure](notesImages/transitiveClosure.png)
 
 All of our relations are finite, so there must be some `k` with `R+ = R ∪ R^2 ∪ ... ∪ R^k`, but `k` will depend on the contents of `R`. We **cannot** compute transitive closure in the Relational Algebra (or SQL without recursion). This is one of the motivations behind graph-oriented databases.
+
+## Document-oriented database systems
+
+A document-oriented database stores data in the form of *semi-structured objects*, e.g. XML or JSON files. Such database systems are also called *aggregate-oriented databases*.
+
+### Semi-structured data
+
+Semi-structured data is a data type that contains semantic tags, but does not conform to the formal structure associated with typical relational databases.
+
+Semi-structured data is useful for transmitting information between applications, since it is highly versatile.
+
+The purpose of document-oriented databases is to allow access to all data associated with a given key (e.g. a person_id/movie_id) with only a single database lookup. This is not possible using a relational model, since tables corresponding to different relations would have to be joined together, which may be infeasible for large tables (even using indexing), since many rows must be searched to collate all of the data.
+
+A document-oriented database effectively consists of a key-value store, that maps a key to a block of bytes (a semi-structured object or file). The contents of this object are typically ignored by the database system - the interpretation of the data is left to the application. This style of database is highly read-optimised, containing a large amount of redundancy in exchange for very fast gathering of information.
