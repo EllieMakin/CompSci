@@ -2,7 +2,7 @@
 
 ## Reading
 
-- Lemahieu, W., Broucke, S. van den, and Baesens, B. Principles ofdatabase management. Cambridge University Press. (2018)
+- Lemahieu, W., Broucke, S. van den, and Baesens, B. Principles of database management. Cambridge University Press. (2018)
 
 ## Database Management System (DBMS)
 
@@ -203,6 +203,123 @@ To ensure that one of our tables is genuinely representing a relationship, we us
 
 ### Keys
 
-Suppose `R(X)` is a relational schema with `Z⊆X`. If for any records `u` and `v` in any instance of `R` we have `u`. `[Z] = v.[Z] => u.[X] = v.[X]`, then `Z` is a superkey for `R`. If no proper subset of `Z` is a superkey, then `Z` is a key for `R`.
+Suppose `R(X)` is a relational schema with `Z⊆X`. If for any records `u` and `v` in any instance of `R` we have `u`. `[Z] = v.[Z] => u.[X] = v.[X]`, then `Z` is a superkey for `R`. If no proper subset of `Z` is a superkey, then `Z` is a key for `R`. We underline a set of attributes to indicate that it is a key.
 
-Suppose we have `R(Z,Y)`. Furthermore, let `S(W)` be a relational schema with `Z⊆W`. We say that `Z` represents a *foreign key in `S` for `R`* if for any instance we have `π[Z](S) ⊆ π[Z](R)`. Think of these as (logical) pointers!
+In a many to many relationship, the keys of both entities together form a key for the relation. In a one-to-many, or many-to-one relationship, the key of the 'many' entity is also the key of the relation. In a one-to-one relationship, the key of either entity can be used as a key for the relation.
+
+### Foreign Keys
+
+Suppose we have `R(Z,Y)`, where `Z` is a key for R. Furthermore, let `S(W)` be a relational schema with `Z⊆W`. We say that `Z` represents a *foreign key in `S` for `R`* if for any instance we have `π[Z](S) ⊆ π[Z](R)`.
+
+A database is said to have *referential integrity* when each foreign key constraint is satisfied.
+
+### Multisets
+
+The relations in SQL actually don't operate on sets; instead, they operate on *multisets*. A multiset is similar to a set, in that the order of the elements does not matter, however in a multiset, the *amount* of each element is taken into account. So, the multiset `{0, 1}` is distinct from `{0, 0, 1}`, etc. This property is important, because aggregate functions such as `count()` and `avg()` will return different results with different amounts of each element. The `distinct` keyword in SQL is used to ignore duplicates in a mutliset, effectively converting it into a regular set:
+
+```
+// returns a multiset
+SELECT a, b FROM r
+    ...
+
+// returns a set
+SELECT DISTINCT a, b FROM r
+    ...
+```
+
+### Database indexes
+
+An index is a data structure created and maintained within a database system, that can greatly reduce the time needed to locate records. For example, in the implementation of a natural join, the naive method would be to simply iterate over each relation, like so:
+
+```
+// Brute force appaoch:
+// scan R
+for each (a, b) in R {
+    // scan S
+    for each (b’, c) in S {
+        if b = b’ then create (a, b, c)
+    }
+}
+```
+
+This will run in `O(n(R)*n(S))` time, but note that for each record in `R`, there may only be a few matching records in `S`, or only one in the case where `b` represents a foreign key into `S`. An index allows the matching elements from `S` to be found much faster, like this:
+
+```
+// scan R
+for each (a, b) in R {
+    // use an index in S
+    for each s in S-INDEX-ON-B(b) {
+        create (a, b, s.c)
+    }
+}
+```
+
+There are many ways to implement indexes, such as search trees, hash tables, etc. but there is no SQL standard. Different distributions of SQL may use different methods, but the representation in the language is the same for each:
+
+```
+CREATE INDEX index_name ON S(B)
+
+DROP INDEX index_name
+```
+
+Indexes can speed up read times, but it will slow down update times, so in some cases it can be helpful to store read-oriented data in a separate database optimised for that purpose.
+
+### NULL
+
+`NULL` is a placeholder - in contrast to C-like languages, it stands for "unknown", rather than "nothing". This means that it can be used in expressions, even though its value is unknown (although it may return `NULL` anyway). For example, The truth table for `AND` including `NULL` is this:
+
+| `AND`  | 0 | 1      | `NULL` |
+| ------ | - | ------ | ------ |
+| **0**  | 0 | 0      | 0      |
+| **1**  | 0 | 1      | `NULL` |
+| `NULL` | 0 | `NULL` | `NULL` |
+
+This behaviour leads to some strange results, such as `NULL = NULL -> NULL`. If you want to compare two `NULL` values, you use the `IS` keyword: `NULL IS NULL -> True`.
+
+## Bacon Number
+
+Kevin Bacon has Bacon number 0. Anyone acting in a movie with Kevin Bacon has Bacon number 1. For any other actor, their bacon number is calculated as follows: Look at all of the co-actors from each of the movies the actor acts in. Find the smallest Bacon number `k` among their co-actors. Then the current actor is assigned Bacon number `k + 1`.
+
+### Relation composition
+
+Given two binary relations `R⊆S×T` and `Q⊆T×U`, we can define their *composition* `Q◦R⊆S×U` as
+```
+Q◦R ≡ {(s,u) | ∃ t∈T, (s,t)∈R ∧ (t,u)∈Q}
+```
+
+A (partial) function `f∈S->T` can be thought of as a binary relation where `(s,t)∈f` if and only if `t = f(s)`. Suppose `R` is a relation where if `(s,t1)∈R` and `(s,t2)∈R`, then it follows that if `t1 = t2`, then `R` represents a partial function. Given partial functions `f∈S->T` and `g∈T->U` their composition `g◦f∈S->U` is defined by `g◦f(s) = g(f(s))`. Note that the definition of `◦` for relations and functions is equivalent for relations representing functions. Since we could write `Q◦R` as `R ⨝[2=1] Q` we can see that joins are just a generalisation of function composition.
+
+### Directed Graphs
+
+`G = (V,A)` is a directed graph, where `V` is a finite set of vertices (also called nodes), `A` is a binary relation over `V` (`A⊆V×V`). If the ordered pair `(u,v)∈A`, then we have an arc from `u` to `v`. The arc `(u,v)∈A` is also called a directed edge, or a *relationship of `u` to `v`*. For example, the directed graph with `V = {A,B,C,D}`, and `A = {(A,B),(A,D),(B,C),(C,C)}`, can be represented graphically:
+
+![directedGraph1](notesImages/directedGraph1.png)
+
+Since `G` contains a binary relation, it can be composed with another directed graph, as long as the set of vertices `V` is the same for both. This also means that it can be composed with itself, for example `G(V, A◦A)` gives `A◦A={(A,C),(B,C),(C,C)}`, which can be drawn like this:
+
+![directedGraph2](notesImages/directedGraph2.png)
+
+This new graph represents all paths of length 2 between vertices in `V`.
+
+Suppose `R` is a binary relation over `S`: `R⊆S×S`. Define *iterated composition* as
+
+```
+R^1 ≡ R
+R^(n+1) ≡ R◦R^n
+```
+
+Let `G = (V,A)` be a directed graph. Suppose `v[1],v[2],···v[k+1]` is a sequence of vertices. This sequence represents a path in `G` of length `k` when `(v[i],v[i+1])∈A, i∈{1,2,···k}`. We will often write this as `v[1]->v[2]->...->v[k]`.
+
+### R-distance (hop count)
+
+Suppose `s0∈π[1](R)`. The distance from `s0` to `s0` is 0. For any other `s′∈π[2](R)`, the distance from `s0` to `s′` is the least `n` such that `(s0,s′)∈R^n`.
+
+In the case of bacon numbers, we can think of the bacon number as the R-distance where `s0` is Kevin Bacon, and R is the co-actor relation.
+
+### Transitive Closure
+
+Suppose `R` is a binary relation over `S`: `R⊆S×S`. The *transitive closure* of `R`, denoted `R+`, is the smallest binary relation on `S` such that `R⊆R+` and `R+` is *transitive*: `(x,y)∈R+ ∧ (y,z)∈R+ => (x,z)∈R+`. This is equivalent to:
+
+![transitiveClosure](notesImages/transitiveClosure.png)
+
+All of our relations are finite, so there must be some `k` with `R+ = R ∪ R^2 ∪ ... ∪ R^k`, but `k` will depend on the contents of `R`. We **cannot** compute transitive closure in the Relational Algebra (or SQL without recursion). This is one of the motivations behind graph-oriented databases.
