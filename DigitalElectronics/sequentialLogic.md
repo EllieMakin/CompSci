@@ -35,7 +35,6 @@ The value of `Q'` when both `R` and `S` are `1` is undefined, shown here by an `
 
 ### Synchronous/Asynchronous operation
 
-
 We can see that for the RS Latch, the output state changes immediately in response to the inputs. This is known as *asynchronous* operation. However, most sequential circuits use *synchronous* operation, where the output of a sequential circuit can only change when a global *enabling signal* is given. This signal is generally the system clock.
 
 ### Transparent D Latch
@@ -57,7 +56,45 @@ The transparent D latch is a *level-triggered* device, meaning it exhibits trans
 
 ![masterSlaveDFlipFlop](notesImages/masterSlaveDFlipFlop.png)
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+The Master-Slave configuration has now been superseded by new F-F circuits which are easier to implement and have better performance; when designing synchronous circuits it is best to use truly edge-triggered flip flop devices
+
+### JK Flip Flop
+
+![jkFlipFlop](notesImages/jkFlipFlop.png)
+
+The JK flip flop is similar in function to a clocked RS flip flop, but with the undefined state - when both inputs are `1` - being replaced by a 'toggle' function. The state transition table for the JK flip flop:
+
+| `J` | `K` | `Q'` |
+| --- | --- | ---- |
+| 0   | 0   | `Q`  |
+| 0   | 1   | 0    |
+| 1   | 0   | 1    |
+| 1   | 1   | `!Q` |
+
+### T Flip Flop
+
+![tFlipFlop](notesImages/tFlipFlop.png)
+
+The T flip flop is essentially a JK flip flop with its inputs combined, so if the input `T` is `0`, it holds its state, and if the input is `1` it toggles (hence **T** flip flop).
+
+| `T` | `Q'` |
+| --- | ---- |
+| 0   | `Q`  |
+| 1   | `!Q` |
+
+### Asynchronous inputs
+
+It is common for flip flops to also have additional so called *asynchronous* inputs, such as clear, or set, which function independently of clock pulses. These are often used to force a synchronous circuit into a known state, say at startup.
+
+### Timing requirements
+
+Various timings must be satisfied if a flip flop is to operate properly:
+
+- Setup time - the minimum duration that the data must be stable at the input before the clock edge
+
+- Hold time: Is the minimum duration that the data must remain stable on the FF input after the clock edge
+
+![timingRequirements](notesImages/timingRequirements.png)
 
 ## Counters
 

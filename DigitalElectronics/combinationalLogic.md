@@ -1,4 +1,4 @@
-# Combinatorial Logic
+# Combinational Logic
 
 ## Reading
 - D. M. Harris and S. L. Harris, ‘Digital Design and Computer Architecture,’ Morgan Kaufmann, 2007 (1stEd.), 2012 (2ndEd.).
@@ -565,9 +565,9 @@ This new 3-level form contains only 9 literals, and can be implemented with only
 
 Because logic gates are implemented with physical electronic components, they have a finite delay before the output of a gate responds to a change in its inputs, known as *propagation delay*.
 
-The cumulative delay of a number of gates in cascade can increase the time before the output of a combinatorial logic circuit becomes valid, for example, in the ripple carry adder, the sum will not be valid until the carry signal has rippled through all of the full adders in the chain.
+The cumulative delay of a number of gates in cascade can increase the time before the output of a combinational logic circuit becomes valid, for example, in the ripple carry adder, the sum will not be valid until the carry signal has rippled through all of the full adders in the chain.
 
-As well as slowing down the operation of combinatorial logic circuits, gate delay can result in what are called *hazards* at the output.
+As well as slowing down the operation of combinational logic circuits, gate delay can result in what are called *hazards* at the output.
 
 ### Hazards
 
@@ -618,7 +618,7 @@ A mux selects one output from several possible inputs, chosen by control inputs.
 
 ![muxes](notesImages/muxes.png)
 
-A mux can be used to implement combinatorial logic functions, for example, the expression `f = !x.!y.!z + !x.y.!z + x.y.!z + x.y.z` (written in DNF form) can be implemented using the following mux:
+A mux can be used to implement combinational logic functions, for example, the expression `f = !x.!y.!z + !x.y.!z + x.y.!z + x.y.z` (written in DNF form) can be implemented using the following mux:
 
 ![logicalMux](notesImages/logicalMux.png)
 
