@@ -564,11 +564,128 @@ let rec treeToList someTree =
 5. *Code the lazy list whose elements are all ordinary lists of zeroes and ones, namely `[]; [0]; [1]; [0; 0]; [0; 1]; [1; 0]; [1; 1]; [0; 0; 0];...`. (Taken from the exam question 2003 Paper 1 Question 5.)*
 
 ```
-Can't do this.
+let rec interleave xq yq =
+    match xq with
+    | Nil -> yq
+    | Cons (x, xf) ->
+        Cons (x, fun () -> interleave yq (xf ()))
+;;
+
+let rec lazyBinary prev =
+    Cons(prev, fun () -> interleave (lazyBinary (0::prev)) (lazyBinary (1::prev)))
+;;
 ```
 
 6. *(Continuing the previous exercise.) A palindrome is a list that equals its own reverse. Code the lazy list whose elements are all palindromes of 0s and 1s, namely `[]; [0]; [1]; [0; 0]; [0; 0; 0]; [0; 1; 0]; [1; 1]; [1; 0; 1]; [1; 1; 1]; [0; 0; 0; 0]; ...`. You may take the reversal function `List.rev` as given.*
 
 ```
-Can't do this either.
+let rec lazyPalindromes binaryList =
+    match binaryList with
+    | Nil -> Nil
+    | Cons(x0, fx) ->
+        Cons(x0 @ (List.rev x0),
+            fun () -> Cons(x0 @ (0::(List.rev x0)),
+                fun () -> Cons(x0 @ (1::(List.rev x0)),
+                    fun () -> lazyPalindromes (fx ())
+                )
+            )
+        )
+;;
+```
+
+## Exercise 10
+
+1. *Suppose that we have an implementation of queues, based on binary trees, such that each operation takes logarithmic time in the worst case. Outline the advantages and drawbacks of such an implementation compared with one presented above.*
+
+The binary tree approach is better in the worst case, since it has `O(log(n))` complexity in the worst case, as opposed to `O(n)` for the above method. However, in most cases, the binary tree approach will be worse, since it has `O(log(n))` complexity compared to `O(1)` for the above method.
+
+2. *The traditional way to implement queues uses a fixed-length array. Two indices into the array indicate the start and end of the queue, which wraps around from the end of the array to the start. How appropriate is such a data structure for implementing breadth-first search?*
+
+Not very appropriate, since breadth first search uses a queue which has no fixed length. The upper bound on the length could be precomputed beforehand if more information was known about the tree, however this is not likely to be the case.
+
+3. *Write a version of the function `breadth` using a nested `let` construction rather than `match`.*
+
+I don't know what this means.
+
+4. *Iterative deepening is inappropriate if 𝑏≈1, where 𝑏 is the branching factor. What search strategy is appropriate in this case?*
+
+Depth first search
+
+5. *Consider the following OCaml function.*
+
+    `let next n = [2 * n; 2 * n + 1]`
+
+    *If we regard it as representing a tree, where the subtrees are computed from the current label, what tree does `next 1` represent?*
+
+The binary tree with each node labelled in breadth first order.
+
+## Exercise 11
+
+1. *Comment, with examples, on the differences between an `int ref list` and an `int list ref`.*
+
+`int ref list` is a list of references to integers, e.g. `[{content=1};{content=2};{content=3}]`.
+
+`int list ref` is a reference to a list of integers, e.g. `{content=[1;2;3]}`.
+
+2. *Write a version of function `power` (Lecture 1) using while instead of recursion.*
+
+```
+let power x n =
+    let jN = ref 0
+    and product = ref 1
+    in
+        while not !jN = n do
+            product := !product * x;
+            jN := !jN + 1
+        done;
+        !product
+;;
+```
+
+3. *What is the effect of `while C1; B do C2 done`?*
+
+If `B` is true, keep doing `C2` until `B` is false.
+
+4. *Write a function to exchange the values of two references, `xr` and `yr`.*
+
+```
+let swapRefs xr yr =
+    let zr = ref !xr
+    in
+        xr := !yr;
+        yr := !zr
+;;
+```
+
+5. *Arrays of multiple dimensions are represented in OCaml by arrays of arrays. Write functions to (a) create an `n×n` identity matrix, given `n`, and (b) to transpose an `m×n` matrix.*
+
+```
+let identityM n =
+    Array.init n (fun row ->
+        Array.init n (fun col ->
+            if col = row then 1 else 0
+        )
+    )
+;;
+
+let transpose m =
+    let tempR = ref (Array.get (Array.get m 0) 0)
+    and jRow = ref 0
+    and jCol = ref 1
+    in
+        while !jRow < (Array.length m) do
+            jCol := !jRow + 1;
+            while !jCol < Array.length (Array.get m 0) do
+                tempR := Array.get (Array.get m !jRow) !jCol;
+                Array.set (Array.get m !jRow) !jCol (
+                    Array.get (Array.get m !jCol) !jRow
+                );
+                Array.set (Array.get m !jCol) !jRow (
+                    !tempR
+                );
+                jCol := !jCol + 1;
+            done;
+            jRow := !jRow + 1;
+        done;
+;;
 ```

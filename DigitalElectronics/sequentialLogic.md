@@ -109,3 +109,48 @@ This is not a synchronous design, since the flip flops are not all connected to 
 ![rippleCounterTiming](notesImages/rippleCounterTiming.png)
 
 As you can see, this design is not ideal, since the outputs do not change at the same time due to propagation delay - it takes a while for the outputs to become coherent. This propagation delay stacks between each stage, limiting the maximum clock speed that will prevent miscounting.
+
+Ignoring propagation delay, you can see that the frequency of each successive counter signal is 1/2 of the previous one, but we may want to use a counter which is not based on a power of 2, e.g. a binary coded decimal (BCD) counter. In order to achieve this, we can use flip flops that have a set/clear asynchronous input, and use an `AND` gate to detect the upper limit, and trigger the lower limit to be written into the flip flops.
+
+### Synchronous counters
+
+Ripple counters should not usually be used to implement counter functions; It is recommended that synchronous counter designs be used instead. In a synchronous design, all the flip flop clock inputs are directly connected to the same clock signal, so all flip flop outputs change at the same time. More complex combinational logic is also needed to generate the appropriate flip flop input signals.
+
+### Excitation table
+
+An excitation table for a flip flop describes which input values are required to achieve a particular next from a given current state. The excitation table can be derived by rearranging the columns of the state transition table. For example, for a D flip flop, the excitation table is:
+
+| `Q` | `Q'` | `D` |
+| --- | ---- | --- |
+| 0   | 0    | 0   |
+| 0   | 1    | 1   |
+| 1   | 0    | 0   |
+| 1   | 1    | 1   |
+
+Clearly for a D flip flop, `D = Q'`, but this is not generally true for other flip flop types, when the excitation table will be more useful. The excitation table for a JK flip flop:
+
+| `Q` | `Q'` | `J` | `K` |
+| --- | ---- | --- | --- |
+| 0   | 0    | 0   | x   |
+| 0   | 1    | 1   | x   |
+| 1   | 0    | x   | 1   |
+| 1   | 1    | x   | 0   |
+
+We can use these excitation tables to derive the logic needed for a synchronous counter. For a 0 to 7 counter, 3 D flip flops are required. Since we know that `D = Q'` for D flip flops, we can use a state transition table to work out what the D inputs should be based on the current `Q` values.
+
+| `Q2` | `Q1` | `Q0` | `D2` | `D1` | `D0` |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+| 0    | 0    | 0    | 0    | 0    | 1    |
+| 0    | 0    | 1    | 0    | 1    | 0    |
+| 0    | 1    | 0    | 0    | 1    | 1    |
+| 0    | 1    | 1    | 1    | 0    | 0    |
+| 1    | 0    | 0    | 1    | 0    | 1    |
+| 1    | 0    | 1    | 1    | 1    | 0    |
+| 1    | 1    | 0    | 1    | 1    | 1    |
+| 1    | 1    | 1    | 0    | 0    | 0    |
+
+From inspection, we can see that `D0 = !Q0`, and `D1 = Q0 XOR Q1`. We can use a K-map to derive `D2 = !Q0.Q2 + !Q1.Q2 + Q0.Q1.!Q2`. This results in the following circuitry for a 3-bit synchronous counter:
+
+![synchronousCounter](notesImages/synchronousCounter.png)
+
+A similar method can be used to design counters for an arbitrary count sequence.
