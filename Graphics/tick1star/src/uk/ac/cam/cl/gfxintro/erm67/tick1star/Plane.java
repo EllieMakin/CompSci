@@ -1,4 +1,4 @@
-package uk.ac.cam.cl.gfxintro.erm67.tick1;
+package uk.ac.cam.cl.gfxintro.erm67.tick1star;
 
 public class Plane extends SceneObject {
 

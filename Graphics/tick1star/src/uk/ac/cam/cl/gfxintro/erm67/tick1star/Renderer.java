@@ -1,9 +1,13 @@
-package uk.ac.cam.cl.gfxintro.erm67.tick1;
+package uk.ac.cam.cl.gfxintro.erm67.tick1star;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class Renderer {
+
+    // Distributed shadow ray constants
+    private final int SHADOW_RAY_COUNT = 10; // no. of spawned shadowRays
+    private final double LIGHT_SIZE = 0.4; // size of spherical light source
 
     // The width and height of the image in pixels
     private int width, height;
