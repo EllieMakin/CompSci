@@ -10,7 +10,7 @@ public class Renderer {
     private final double LIGHT_SIZE = 0.4; // size of spherical light source
 
     // Distributed depth-of-field constants
-    private final int DOF_RAY_COUNT = 1; // no. of spawned DoF rays
+    private final int DOF_RAY_COUNT = 50; // no. of spawned DoF rays
     private final double DOF_FOCAL_PLANE = 3.51805; // focal length of camera
     private final double DOF_AMOUNT = 0.1; // amount of DoF effect
 
@@ -155,26 +155,20 @@ public class Renderer {
             for (int x = 0; x < width; ++x) {
                 Ray ray = camera.castRay(x, y); // Cast ray through pixel
 
+                Plane focalPlane = new Plane(new Vector3(0, 0, DOF_FOCAL_PLANE), new Vector3(0, 0, 1), new ColorRGB(0));
+                Vector3 focalPoint = focalPlane.intersectionWith(ray).getLocation();
+
                 ColorRGB linearRGB = new ColorRGB(0);
+                for (int jRay = 0; jRay < DOF_RAY_COUNT; jRay++) {
+                    Vector3 aperturePoint = new Vector3(
+                        (Math.random() * 2 - 1) * DOF_AMOUNT,
+                        (Math.random() * 2 - 1) * DOF_AMOUNT,
+                        0
+                    );
 
-                if (DOF_RAY_COUNT == 1) {
-                    linearRGB = linearRGB.add(trace(scene, ray, bounces));
-                } else {
-                    Plane focalPlane = new Plane(new Vector3(0, 0, DOF_FOCAL_PLANE), new Vector3(0, 0, 1), new ColorRGB(0));
-                    Vector3 focalPoint = focalPlane.intersectionWith(ray).getLocation();
-
-                    for (int jRay = 0; jRay < DOF_RAY_COUNT; jRay++) {
-                        Vector3 aperturePoint = new Vector3(
-                            (Math.random() * 2 - 1) * DOF_AMOUNT,
-                            (Math.random() * 2 - 1) * DOF_AMOUNT,
-                            0
-                        );
-
-                        Ray dofRay = new Ray(aperturePoint, focalPoint.subtract(aperturePoint).normalised());
-                        linearRGB = linearRGB.add(trace(scene, dofRay, bounces).scale(1/(double)DOF_RAY_COUNT)); // Trace path of cast ray and determine colour
-                    }
+                    Ray dofRay = new Ray(aperturePoint, focalPoint.subtract(aperturePoint).normalised());
+                    linearRGB = linearRGB.add(trace(scene, dofRay, bounces).scale(1/(double)DOF_RAY_COUNT)); // Trace path of cast ray and determine colour
                 }
-
                 ColorRGB gammaRGB = tonemap( linearRGB );
                 image.setRGB(x, y, gammaRGB.toRGB()); // Set image colour to traced colour
             }

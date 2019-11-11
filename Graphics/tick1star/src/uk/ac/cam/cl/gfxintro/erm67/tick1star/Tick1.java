@@ -14,8 +14,8 @@ public class Tick1 {
     public static final int DEFAULT_BOUNCES = 2; // Default number of ray bounces
 
     // Height and width of the output image
-    private static final int WIDTH_PX = 640;
-    private static final int HEIGHT_PX = 480;
+    private static final int WIDTH_PX = 640*2;
+    private static final int HEIGHT_PX = 480*2;
 
     public static void usageError() { // Usage information
         System.err.println("USAGE: <tick2> [--input INPUT] [--output OUTPUT] [--bounces BOUNCES]");
