@@ -1,0 +1,21 @@
+[submodule "OOP/chess"]
+	path = OOP/chess
+	url = erm67@chime.cl.cam.ac.uk:erm67/chess
+[submodule "OOP/fibonacci"]
+	path = OOP/fibonacci
+	url = erm67@chime.cl.cam.ac.uk:erm67/fibonacci
+[submodule "OOP/dcc_generate_palindromic_pairs"]
+	path = OOP/dcc_generate_palindromic_pairs
+	url = erm67@chime.cl.cam.ac.uk:erm67/dcc_generate_palindromic_pairs
+[submodule "OOP/dcc_get_product_of_all_other_elements"]
+	path = OOP/dcc_get_product_of_all_other_elements
+	url = erm67@chime.cl.cam.ac.uk:erm67/dcc_get_product_of_all_other_elements
+[submodule "OOP/game_of_life"]
+	path = OOP/game_of_life
+	url = erm67@chime.cl.cam.ac.uk:erm67/game_of_life
+[submodule "OOP/matrices"]
+	path = OOP/matrices
+	url = erm67@chime.cl.cam.ac.uk:erm67/matrices
+[submodule "OOP/sorting"]
+	path = OOP/sorting
+	url = erm67@chime.cl.cam.ac.uk:erm67/sorting
