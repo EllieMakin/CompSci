@@ -1,63 +1,63 @@
-type peano =
-    | Z
-    | S of peano
+type nested_list =
+    | Atom of int
+    | Nest of nested_list list
 ;;
 
-type binary =
-    bool list
+let n = Nest([
+    Nest([
+        Atom 3;
+        Atom 4
+    ]);
+    Atom 5;
+    Nest([
+        Atom 6;
+        Nest([
+            Atom 7
+        ]);
+        Atom 8
+    ]);
+    Nest([])
+])
 ;;
 
-type 'a church =
-    | X of 'a
-    | F of (unit -> 'a church)
+let rec flatten nl =
+    match nl with
+    | Atom (i) -> [i]
+    | Nest ([]) -> []
+    | Nest (n::ns) ->
+        (flatten n) @ (flatten (Nest(ns)))
 ;;
 
-let rec intFromPeano p =
-    match p with
-    | Z -> 0
-    | S (pn) -> 1 + intFromPeano pn
+let rec nested_map f n =
+    match n with
+    | Atom(i) -> Atom (f i)
+    | Nest([]) -> Nest([])
+    | Nest(n0::ns) ->
+        Nest((nested_map f n0) :: (List.map (nested_map f) ns))
 ;;
 
-let rec intFromBinary b =
-    match b with
-    | [] -> 0
-    | d::ds ->
-        (if d then 1 else 0) + 2 * (intFromBinary ds)
-;;
-
-let rec intFromChurch c =
-    match c with
-    | X (_) -> 0
-    | F (f) -> 1 + (intFromChurch (f ()))
-;;
-
-let rec addPeano m n =
-    match m with
-    | Z -> n
-    | S(m1) -> addPeano m1 (S (n))
-;;
-
-let rec addBinary m n =
-    let rec subAddBinary x y cIn =
-        let a = if x = [] then [false] else x
-        and b = if y = [] then [false] else y
-        in
-        if x = [] && y = [] then
-            [cIn]
-        else
-            match a, b with
-            | x0::xs, y0::ys ->
-                let sum = x0 <> y0 <> cIn
-                and cOut = (x0 && y0) || (x0 && cIn) || (y0 && cIn)
-                in
-                sum :: (subAddBinary xs ys cOut)
-            | _, _ -> []
+let rec pack_as x y =
+    let rec subPack r l nl =
+        match nl with
+        | Atom(i) ->
+            r := !r + 1;
+            Atom(List.nth l !r)
+        | Nest([]) -> Nest([])
+        | Nest(n0::ns) ->
+            let packed0 = subPack r l n0
+            in
+            Nest(packed0 :: (List.map (subPack r l) ns))
+    and j = ref (~-1)
     in
-    subAddBinary m n false
+    subPack j x y
 ;;
 
-let rec addChurch m n =
-    match m with
-    | X(_) -> n
-    | F(f) -> addChurch (f ()) (F(fun () -> n))
+type nested_zlist = ZAtom of int
+    | ZNest of (unit -> nested_zlist list)
+;;
+
+let rec zlistToNlist zl =
+    match zl with
+    | ZAtom(i) -> Atom(i)
+    | ZNest(f) -> Nest(List.map zlistToNlist (f ()))
 ;;
