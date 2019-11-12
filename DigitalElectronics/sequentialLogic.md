@@ -312,6 +312,7 @@ A GAL is to a GLA as a PAL is to a PLA; the difference being that the outputs fr
 
 ## Field Programmable Gate Arrays (FPGA)
 
-FPGAs are the latest type of programmable logic, consisting of an array of Configurable Logic Blocks (CLBs) surrounded by Input Output Blocks (IOBs). CLBs contain lookup tables (LUTs), multiplexers (MUXs), and D flip flops. Programmable routing channels allow CLBs to be connected to each other and to IOBs.
+FPGAs are the latest type of programmable logic, which are able to simulate other hardware by changing their configurations. They contain an array of Configurable Logic Blocks (CLBs) surrounded by Input Output Blocks (IOBs).
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+### Configurable Logic Blocks (CLBs)
+CLBs are components which can be configured to simulate other logical functions. They contain lookup tables (LUTs), which can be programmed with logical functions (similar to using ROM for combinational logic). They also contain multiplexers (MUXs), and D flip flops, which allow sequential logic to be performed. Programmable routing channels allow CLBs to be connected to each other and to IOBs.
