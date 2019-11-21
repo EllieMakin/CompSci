@@ -86,7 +86,7 @@ Let $d$ and $n$ be integers. We say that $d$ divides $n$, and write $d \mid n$, 
 
 ### Universal Quantification
 
-Universal statements are of the form `for all` individuals $x$ of the universe of discourse, the property $P(x)$ holds.
+Universal statements are of the form `for all` individuals $x$ of the universe of discourse, the property $P(x)$ holds, or in symbols, $\forall x \$
 
 ## Proof Patterns
 
