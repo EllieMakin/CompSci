@@ -35,11 +35,32 @@ public class CubeRobot {
 	private Texture body_texture;		// Texture image to be used by the body shader
 	private Matrix4f body_transform;	// Transformation matrix of the body object
 
-	// TODO: Add Component 2: Right Arm
-
+	// Component 2: Right Arm
+    private Mesh armR_mesh;
+    private ShaderProgram armR_shader;
+    private Texture armR_texture;
+    private Matrix4f armR_transform;
 
 	// Complete rest of the robot
+    private Mesh armL_mesh;
+    private ShaderProgram armL_shader;
+    private Texture armL_texture;
+    private Matrix4f armL_transform;
 
+    private Mesh legR_mesh;
+    private ShaderProgram legR_shader;
+    private Texture legR_texture;
+    private Matrix4f legR_transform;
+
+    private Mesh legL_mesh;
+    private ShaderProgram legL_shader;
+    private Texture legL_texture;
+    private Matrix4f legL_transform;
+
+    private Mesh head_mesh;
+    private ShaderProgram head_shader;
+    private Texture head_texture;
+    private Matrix4f head_transform;
 
 /**
  *  Constructor
@@ -67,20 +88,98 @@ public class CubeRobot {
 
 		// Build Transformation Matrix
 		body_transform = new Matrix4f();
-
-		// TODO: Scale the body transformation matrix
-
-
-		// TODO: Create right arm node
+        body_transform = body_transform.scale(1, 2, 0.75f);
 
 
-		// TODO: Initialise Texturing
+        // Create right arm node
+        armR_mesh = new CubeMesh();
+        armR_shader = new ShaderProgram(new Shader(GL_VERTEX_SHADER, VSHADER_FN), new Shader(GL_FRAGMENT_SHADER, FSHADER_FN), "colour");
+        armR_shader.bindDataToShader("oc_position", armR_mesh.vertex_handle, 3);
+        armR_shader.bindDataToShader("oc_normal", armR_mesh.normal_handle, 3);
+        armR_shader.bindDataToShader("texcoord", armR_mesh.tex_handle, 2);
+
+		// Initialise Texturing
+        armR_texture = new Texture();
+        armR_texture.load("resources/cubemap.png");
 
 
-		// TODO: Build Right Arm's Transformation Matrix (rotate the right arm around its end)
+		// Build Right Arm's Transformation Matrix (rotate the right arm around its end)
+        armR_transform = new Matrix4f();
+        armR_transform = armR_transform
+                .translate(1.25f, 0, 0)
+                .translate(-0.25f, 2, 0)
+                .rotateAffineXYZ(0, 0, (float)Math.PI/16)
+                .translate(0.25f, -2, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
 
 
-		// TODO: Complete robot
+        armL_mesh = new CubeMesh();
+        armL_shader = new ShaderProgram(new Shader(GL_VERTEX_SHADER, VSHADER_FN), new Shader(GL_FRAGMENT_SHADER, FSHADER_FN), "colour");
+        armL_shader.bindDataToShader("oc_position", armL_mesh.vertex_handle, 3);
+        armL_shader.bindDataToShader("oc_normal", armL_mesh.normal_handle, 3);
+        armL_shader.bindDataToShader("texcoord", armL_mesh.tex_handle, 2);
+
+        armL_texture = new Texture();
+        armL_texture.load("resources/cubemap.png");
+
+        armL_transform = new Matrix4f();
+        armL_transform = armL_transform
+                .translate(-1.25f, 0, 0)
+                .translate(0.25f, 2, 0)
+                .rotateAffineXYZ(0, 0, (float)-Math.PI/16)
+                .translate(-0.25f, -2, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
+
+
+        legR_mesh = new CubeMesh();
+        legR_shader = new ShaderProgram(new Shader(GL_VERTEX_SHADER, VSHADER_FN), new Shader(GL_FRAGMENT_SHADER, FSHADER_FN), "colour");
+        legR_shader.bindDataToShader("oc_position", legR_mesh.vertex_handle, 3);
+        legR_shader.bindDataToShader("oc_normal", legR_mesh.normal_handle, 3);
+        legR_shader.bindDataToShader("texcoord", legR_mesh.tex_handle, 2);
+
+        legR_texture = new Texture();
+        legR_texture.load("resources/cubemap.png");
+
+        legR_transform = new Matrix4f();
+        legR_transform = legR_transform
+                .translate(0.5f, -2.0f, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
+
+
+        legL_mesh = new CubeMesh();
+        legL_shader = new ShaderProgram(new Shader(GL_VERTEX_SHADER, VSHADER_FN), new Shader(GL_FRAGMENT_SHADER, FSHADER_FN), "colour");
+        legL_shader.bindDataToShader("oc_position", legL_mesh.vertex_handle, 3);
+        legL_shader.bindDataToShader("oc_normal", legL_mesh.normal_handle, 3);
+        legL_shader.bindDataToShader("texcoord", legL_mesh.tex_handle, 2);
+
+        legL_texture = new Texture();
+        legL_texture.load("resources/cubemap.png");
+
+        legL_transform = new Matrix4f();
+        legL_transform = legL_transform
+                .translate(-0.5f, -2.0f, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
+
+
+        head_mesh = new CubeMesh();
+        head_shader = new ShaderProgram(new Shader(GL_VERTEX_SHADER, VSHADER_FN), new Shader(GL_FRAGMENT_SHADER, FSHADER_FN), "colour");
+        head_shader.bindDataToShader("oc_position", head_mesh.vertex_handle, 3);
+        head_shader.bindDataToShader("oc_normal", head_mesh.normal_handle, 3);
+        head_shader.bindDataToShader("texcoord", head_mesh.tex_handle, 2);
+
+        head_texture = new Texture();
+        head_texture.load("resources/cubemap_head.png");
+
+        head_transform = new Matrix4f();
+        head_transform = head_transform
+                .translate(0, 3, 0)
+                .scale(0.5f, 0.5f, 0.5f)
+        ;
+
 
 	}
 
@@ -91,18 +190,62 @@ public class CubeRobot {
 	 * @param deltaTime		- Time taken to render this frame in seconds (= 0 when the application is paused)
 	 * @param elapsedTime	- Time elapsed since the beginning of this program in millisecs
 	 */
-	public void render(Camera camera, float deltaTime, long elapsedTime) {
+    public void render(Camera camera, float deltaTime, long elapsedTime) {
 
 		// TODO: Animate Body. Translate the body as a function of time
+        body_transform = new Matrix4f();
+        body_transform = body_transform
+                .rotateAffineXYZ(0, (float) Math.PI * elapsedTime / 5000, 0)
+                .scale(1, 2, 0.75f);
 
+        armR_transform = new Matrix4f();
+        armR_transform = armR_transform
+                .rotateAffineXYZ(0, (float) Math.PI * elapsedTime / 5000, 0)
+                .translate(1.25f, 0, 0)
+                .translate(-0.25f, 2, 0)
+                .rotateAffineXYZ(0, 0, (float) (Math.PI / 3 * (1f + Math.sin(elapsedTime / 1000f))))
+                .translate(0.25f, -2, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
 
-		// TODO: Animate Arm. Rotate the left arm around its end as a function of time
+        armL_transform = new Matrix4f();
+        armL_transform = armL_transform
+                .rotateAffineXYZ(0, (float) Math.PI * elapsedTime / 5000, 0)
+                .translate(-1.25f, 0, 0)
+                .translate(0.25f, 2, 0)
+                .rotateAffineXYZ(0, 0, (float)-(Math.PI / 3 * (1f + Math.sin(elapsedTime / 1000f))))
+                .translate(-0.25f, -2, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
+
+        legR_transform = new Matrix4f();
+        legR_transform = legR_transform
+                .rotateAffineXYZ(0, (float) Math.PI * elapsedTime / 5000, 0)
+                .translate(0.5f, -2.0f, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
+
+        legL_transform = new Matrix4f();
+        legL_transform = legL_transform
+                .rotateAffineXYZ(0, (float) Math.PI * elapsedTime / 5000, 0)
+                .translate(-0.5f, -2.0f, 0)
+                .scale(0.25f, 2.0f, 0.25f)
+        ;
+
+        head_transform = new Matrix4f();
+        head_transform = head_transform
+                .rotateAffineXYZ(0, (float) Math.PI * elapsedTime / 5000, 0)
+                .translate(0, 3, 0)
+                .scale(0.5f, 0.5f, 0.5f)
+        ;
 
 
 		renderMesh(camera, body_mesh, body_transform, body_shader, body_texture);
-
-		// TODO: Chain transformation matrices of the arm and body (Scene Graph)
-		// TODO: Render Arm.
+        renderMesh(camera, armR_mesh, armR_transform, armR_shader, armR_texture);
+        renderMesh(camera, armL_mesh, armL_transform, armL_shader, armL_texture);
+        renderMesh(camera, legR_mesh, legR_transform, legR_shader, legR_texture);
+        renderMesh(camera, legL_mesh, legL_transform, legL_shader, legL_texture);
+        renderMesh(camera, head_mesh, head_transform, head_shader, head_texture);
 
 
 		//TODO: Render rest of the robot
