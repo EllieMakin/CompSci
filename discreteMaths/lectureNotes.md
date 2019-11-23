@@ -86,7 +86,7 @@ Let $d$ and $n$ be integers. We say that $d$ divides $n$, and write $d \mid n$, 
 
 ### Universal Quantification
 
-Universal statements are of the form `for all` individuals $x$ of the universe of discourse, the property $P(x)$ holds, or in symbols, $\forall x \$
+Universal statements are of the form `for all` individuals $x$ of the universe of discourse, the property $P(x)$ holds, or in symbols, $\forall x P(x)$
 
 ## Proof Patterns
 
@@ -158,3 +158,23 @@ $(\impliedby)$, and give a proof of $P \impliedby Q$
 $(\implies)$ Assume $n$ is an even integer. That is, $n = 2a$ for some integer $a$. Then, $n^2 = 4a^2 = 2(2a^2) = 2k$, for $k = 2a^2$, showing $n^2$ is even.
 
 $(\impliedby)$ We prove the contrapositive, that is, if $n$ is odd then $n^2$ is odd. Assume that $n$ is odd. That is, by definition, $n = 2b+1$ for some integer $b$. Then, $n^2 = (2b+1)^2 = 4b^2 + 4b + 1 = 2(2b^2 + 2b) + 1 = 2m + 1$, for $m = 2b^2 + 2b$, showing that $n^2$ is odd.
+
+### Universal Statements
+
+In order to prove that $\forall x P(x)$, we let $x$ stand for an arbitrary individual, and prove $P(x)$. When writing a proof, we write:
+
+Let $x$ be an arbitrary individual.
+
+And then show that $P(x)$ holds.
+
+#### Example
+
+[Proposition] Fix a positive integer $m$. For integers $a$ and $b$, we have that $a \equiv b$ (mod $m$), if and only if, for all positive integers $n$, we have that $n \cdot a \equiv n \cdot b$ (mod $n \cdot m$).
+
+#### Proof
+
+RTP: $\forall m \in \mathbb{Z}^+ \forall a, b \in \mathbb{Z} (\\
+    a \equiv b \text{ (mod }m) \iff \forall n \in \mathbb{Z}^+(a \cdot n \equiv b \cdot n \text{ (mod }m \cdot n))\\
+)$
+
+($\implies$) Assume $m \in \mathbb{Z}^+$, $a, b \in \mathbb{Z}$, and $a \equiv b$ (mod $m$). That is, by definition, $m \mid (a-b)$, or $a - b = km$, for some integer $k$. Let $n$ be an arbitrary positive integer. Then, $n(a-b) = n(km)$, so $a \cdot n - b \cdot n = k(m \cdot n)$. Thus, $m \cdot n \mid (a \cdot n - b \cdot n)$, so $a \cdot n \equiv b \cdot n$ (mod $m$), as required.
