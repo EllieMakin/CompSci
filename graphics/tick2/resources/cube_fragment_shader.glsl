@@ -41,7 +41,6 @@ void main()
     vec3 specular = C_spec * k_s * I_i * pow(max(0, dot(r_i, v)), alpha);
 
     linear_color += ambient + diffuse + specular;
-	// TODO: Sample the texture and replace diffuse surface colour (C_diff) with texel value
 
 
 	color = tonemap(linear_color);
