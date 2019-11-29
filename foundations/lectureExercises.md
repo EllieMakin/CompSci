@@ -17,13 +17,13 @@
 2. *Using the date representation of the previous exercise, code OCaml functions to:*
 
     *(a) compare two years*
-    ```
+    ```ocaml
     let compareYears year1 year2 =
         ((year2 + 50) mod 100) - ((year1 + 50) mod 100)
     ;;
     ```
     *(b) add/subtract some given number of years from another year.*
-    ```
+    ```ocaml
     let addYears startYear nYears =
         (startYear + nYears) mod 100
     ;;
@@ -41,7 +41,7 @@ In the last return statement, the result is computed using the `*.` operator, wh
 `x + x + ... + x`
 where `x` has type float. (It is essential to use repeated addition rather than multiplication!)*
 
-```
+```ocaml
 let rec addFloats x n =
     if n <= 0 then 0
     else x +. addFloats x (n-1)
@@ -51,7 +51,7 @@ let rec addFloats x n =
 6. *Another example of the inaccuracy of floating-point arithmetic takes the golden ratio `𝜙 ≈ 1.618…` as its starting point: `𝛾[0] = (1 + sqrt(5))/2` and `𝛾[n+1] = 1/(𝛾[n] − 1)`.
 In theory, it is easy to prove that `𝛾[n] = ⋯ = 𝛾[1] = 𝛾[0]` for all `n > 0`. Code this computation in OCaml and report the value of 𝛾[50].*
 
-```
+```ocaml
 let rec goldenFloat n =
     if n > 0 then 1.0 /. (goldenFloat (n-1) -. 1.0)
     else (1.0 +. (sqrt 5.0)) /. 2.0
@@ -62,7 +62,7 @@ let rec goldenFloat n =
 
 1. *Code an iterative version of the function `power`*.
 
-```
+```ocaml
 let rec iterativePower base index product =
     if index = 0 then
         product
@@ -102,7 +102,7 @@ f(n) = O(A*g[1](n)+ ... + A*g[k](n))
 1. *Code a recursive function to compute the sum of a list’s elements. Then code an iterative version and comment on the improvement in efficiency.*
 
 Recursive:
-```
+```ocaml
 let sumListRec someList =
     match someList with
     | [] -> 0
@@ -111,7 +111,7 @@ let sumListRec someList =
 ```
 
 Iterative:
-```
+```ocaml
 let sumListIter someList total =
     match someList with
     | [] -> total
@@ -123,7 +123,7 @@ The iterative version is more efficient, because it does not have to store each 
 
 2. *Code a function to return the last element of a non-empty list. How efficiently can this be done?*
 
-```
+```ocaml
 let lastItem someList =
     match someList with
     | [] -> raise (Failure "There is no last item in an empty list")
@@ -135,7 +135,7 @@ The best this can be done is `O(n)`, because the list must be traversed in order
 
 3. *Code a function to return the list consisting of the even-numbered elements of the list given as its argument. For example, given `[a; b; c; d]` it should return `[b; d]`.*
 
-```
+```ocaml
 let rec getEvens someList =
     match someList with
     | [] -> []
@@ -146,12 +146,12 @@ let rec getEvens someList =
 
 4. *Consider the polymorphic types in these two function declarations:*
 
-    ```
+    ```ocaml
     let id x = x`
 
     val id : 'a -> 'a = <fun>
     ```
-    ```
+    ```ocaml
     let rec loop x = loop x
 
     val loop : 'a -> 'b = <fun>
@@ -164,7 +164,7 @@ For `loop`, the output type is not known, because it is not generated in any exp
 
 5. *Code a function `tails` to return the list of the tails of its argument. For example, given `[1; 2; 3]` it should return `[[1; 2; 3]; [2; 3]; [3]; []]`.*
 
-```
+```ocaml
 let tails someList =
     match someList with
     | [] -> [[]]
@@ -176,7 +176,7 @@ let tails someList =
 
 1. *Code a function to implement set union, by analogy with inter above. It should avoid introducing repetitions, for example the union of the lists `[4; 7; 1]` and `[6; 4; 7]` should be `[1; 6; 4; 7]` (though the order does not matter).*
 
-```
+```ocaml
 let rec union list1 list2 =
     let rec isMember someItem someList =
         match someList with
@@ -199,7 +199,7 @@ let rec union list1 list2 =
 
 2. *Code a function that takes a list of integers and returns two lists, the first consisting of all non-negative numbers found in the input and the second consisting of all the negative numbers.*
 
-```
+```ocaml
 let rec separateNegatives someList =
     match someList with
     | [] -> ([], [])
@@ -215,7 +215,7 @@ let rec separateNegatives someList =
 
 3. *How does this version of zip differ from the one above?*
 
-    ```
+    ```ocaml
     let rec zip xs ys =
         match xs, ys with
         | (x::xs, y::ys) -> (x, y) :: zip xs ys
@@ -247,7 +247,7 @@ The complexity of finding the minimal element in an unsorted list is `O(n)`, sin
 
 2. Implement selection sort (see previous exercise) using OCaml.
 
-```
+```ocaml
 let rec selectionSort someList =
     (* Brings the smallest element to the front of the list *)
     let rec selectMinimum checked toCheck =
@@ -279,7 +279,7 @@ The worst case for bubble sort would be if the list was reversed. This would req
 
 4. *Implement bubble sort (see previous exercise) using OCaml.*
 
-```
+```ocaml
 let rec bubbleSort someList =
     let rec bubblePass otherList =
         match otherList with
@@ -303,7 +303,7 @@ let rec bubbleSort someList =
 
 1. *Give the declaration of an OCaml type for the days of the week. Comment on the practicality of such a type in a calendar application.*
 
-```
+```ocaml
 type weekDay =
     | Monday
     | Tuesday
@@ -319,7 +319,7 @@ This type may be fairly practical in a calendar application, since the type defi
 
 2. *Write an OCaml function taking a binary tree labelled with integers and returning their sum.*
 
-```
+```ocaml
 let rec sumTree someTree =
     match someTree with
     | Lf -> 0
@@ -330,7 +330,7 @@ let rec sumTree someTree =
 
 3. *Using the definition of 'a tree from before: `type 'a tree = Lf | Br of 'a * 'a tree * 'a tree`, examine the following function declaration. What does `ftree (1, n)` accomplish?*
 
-    ```
+    ```ocaml
     let rec ftree k n =
         if n = 0 then
             Lf
@@ -343,7 +343,7 @@ let rec sumTree someTree =
 
 4. *Give the declaration of an OCaml type for arithmetic expressions that have the following possibilities: real numbers, variables (represented by strings), or expressions of the form `−E, E+E, E×E`.*
 
-```
+```ocaml
 type expression =
     | Real of float
     | Var of string
@@ -353,7 +353,7 @@ type expression =
 ```
 
 5. *Continuing the previous exercise, write a function that evaluates an expression. If the expression contains any variables, your function should raise an exception indicating the variable name.*
-```
+```ocaml
 let rec evaluate someExpression =
     match someExpression with
     | Real (value) -> value
@@ -383,7 +383,7 @@ The results are different because the tree fills from the top down, so if an ele
 
 2. *Code an insertion function for binary search trees. It should resemble the existing `update` function except that it should raise the exception `Collision` if the item to be inserted is already present.*
 
-```
+```ocaml
 exception Collision
 let rec insertToTree k v someTree =
     match someTree with
@@ -408,7 +408,7 @@ Recursively pass the requested entry down the correct branches until the item is
 
 5. *Code the delete function outlined in the previous exercise.*
 
-```
+```ocaml
 (* This relies on the insertToTree function from before *)
 let deleteFromTree entry someTree =
     let merge tree1 tree2 =
@@ -439,7 +439,7 @@ The new functions no longer use the `@` operator, instead constructing the list 
 
 8. *Write a function to remove the first element from a functional array. All the other elements are to have their subscripts reduced by one. The cost of this operation should be linear in the size of the array.*
 
-```
+```ocaml
 let rec removeFirst someTree =
     let rec merge tree1 tree2 =
         match tree1 with
@@ -473,7 +473,7 @@ Applies the function `f` to variables `x` and `y` but with their order swapped. 
 
 2. *There are many ways of combining orderings. The lexicographic ordering uses two keys for comparisons. It is specified by `(x',y′) < (x,y) <=> x′ < x OR (x′ = x AND y′ < y)`. Write an OCaml function to lexicographically combine two orderings, supplied as functions. Explain how it allows function insort to sort a list of pairs.*
 
-```
+```ocaml
 let isLessDouble isLess1 isLess2 double1 double2 =
     match double1 with
     | (x', y') ->
@@ -485,7 +485,7 @@ let isLessDouble isLess1 isLess2 double1 double2 =
 
 3. *Without using map write a function map2 such that map2 f is equivalent to map (map f). The obvious solution requires declaring two recursive functions. Try to get away with only one by exploiting nested pattern-matching.*
 
-```
+```ocaml
 let rec map2 f = function
     | [] -> []
     | [] :: restLists ->
@@ -500,7 +500,7 @@ let rec map2 f = function
 
 4. *The type `'a option`, declared below, can be viewed as a type of lists having at most one element. (It is typically used as an alternative to exceptions.) Declare an analogue of the function `map` for type `'a option.`* `type 'a option = None | Some of 'a`
 
-```
+```ocaml
 let optionMap f = function
     | None -> None
     | Some (element) -> Some(f element)
@@ -509,7 +509,7 @@ let optionMap f = function
 
 5. *Recall the making change function of Lecture 4; Function `allc` applies the function `cons a c` to every element of a list. Eliminate it by declaring a curried cons function and applying `map`.*
 
-```
+```ocaml
 let rec change till amt =
     if amt = 0 then
         [ [] ]
@@ -527,7 +527,7 @@ let rec change till amt =
 ## Exercise 9
 
 1. *Code an analogue of map for sequences.*
-```
+```ocaml
 let mapSequence f seq =
     match seq with
     | Nil -> Nil
@@ -546,7 +546,7 @@ I don't understand this question.
 
 4. *A lazy binary tree is either empty or is a branch containing a label and two lazy binary trees, possibly to infinite depth. Present an OCaml datatype to represent lazy binary trees, along with a function that accepts a lazy binary tree and produces a lazy list that contains all of the tree’s labels. (Taken from the exam question 2008 Paper 1 Question 5.)*
 
-```
+```ocaml
 let rec treeToList someTree =
     let rec appendq xq yq =
         match xq with
@@ -563,7 +563,7 @@ let rec treeToList someTree =
 
 5. *Code the lazy list whose elements are all ordinary lists of zeroes and ones, namely `[]; [0]; [1]; [0; 0]; [0; 1]; [1; 0]; [1; 1]; [0; 0; 0];...`. (Taken from the exam question 2003 Paper 1 Question 5.)*
 
-```
+```ocaml
 let rec interleave xq yq =
     match xq with
     | Nil -> yq
@@ -578,7 +578,7 @@ let rec lazyBinary prev =
 
 6. *(Continuing the previous exercise.) A palindrome is a list that equals its own reverse. Code the lazy list whose elements are all palindromes of 0s and 1s, namely `[]; [0]; [1]; [0; 0]; [0; 0; 0]; [0; 1; 0]; [1; 1]; [1; 0; 1]; [1; 1; 1]; [0; 0; 0; 0]; ...`. You may take the reversal function `List.rev` as given.*
 
-```
+```ocaml
 let rec lazyPalindromes binaryList =
     match binaryList with
     | Nil -> Nil
@@ -629,7 +629,7 @@ The binary tree with each node labelled in breadth first order.
 
 2. *Write a version of function `power` (Lecture 1) using while instead of recursion.*
 
-```
+```ocaml
 let power x n =
     let jN = ref 0
     and product = ref 1
@@ -648,7 +648,7 @@ If `B` is true, keep doing `C2` until `B` is false.
 
 4. *Write a function to exchange the values of two references, `xr` and `yr`.*
 
-```
+```ocaml
 let swapRefs xr yr =
     let zr = ref !xr
     in
@@ -659,7 +659,7 @@ let swapRefs xr yr =
 
 5. *Arrays of multiple dimensions are represented in OCaml by arrays of arrays. Write functions to (a) create an `n×n` identity matrix, given `n`, and (b) to transpose an `m×n` matrix.*
 
-```
+```ocaml
 let identityM n =
     Array.init n (fun row ->
         Array.init n (fun col ->
