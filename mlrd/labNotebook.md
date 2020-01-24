@@ -35,10 +35,10 @@ A lot of the words I've chosen are listed with the same sentiment in the given l
 ### Part 3: Simple Classifier Virtual programming lab
 
 #### Setup
-I've named the package `uk.ac.cam.cl.erm67.exercises` for this task. In order to compile my code, I run the following command from my parent `task1` folder:
+I've named the package `uk.ac.cam.cl.erm67.exercises` for this task. In order to compile my code, I run the following command from my parent `tasks` folder:
 
 ```sh
-javac -d out/ -cp src/stanford-postagger.jar src/uk/ac/cam/cl/erm67/exercises/Exercise1.java src/uk/ac/cam/cl/mlrd/exercises/sentiment_detection/*.java src/uk/ac/cam/cl/mlrd/testing/Exercise1Tester.java
+javac -d out/ -cp src/stanford-postagger.jar src/uk/ac/cam/cl/erm67/exercises/*.java src/uk/ac/cam/cl/mlrd/exercises/sentiment_detection/*.java src/uk/ac/cam/cl/mlrd/testing/Exercise1Tester.java
 ```
 
 Then I can run the tests with
@@ -62,3 +62,41 @@ I initially added some code that would allow me to use weights based on the `int
 I then tried changing the boundary between positive and negative reviews, so where a rating $\ge b \implies positive$. Previously, $b$ had just been zero. I found that the best value for for this boundary was at about $b = 3$, giving an accuracy of $A = 0.6711111068725586$.
 
 Even with these improvements, the accuracy is not very impressive.
+
+## Task 2: Naive Bayes Classifier
+
+### Step 0: Data preparation
+
+Compile the code with
+
+```sh
+javac -d out/ -cp src/stanford-postagger.jar src/uk/ac/cam/cl/erm67/exercises/*.java src/uk/ac/cam/cl/mlrd/exercises/sentiment_detection/*.java src/uk/ac/cam/cl/mlrd/testing/*.java src/uk/ac/cam/cl/mlrd/utils/*.java
+```
+
+Then run the tests with
+
+```sh
+java -cp src/stanford-postagger.jar:out uk.ac.cam.cl.mlrd.testing.Exercise2Tester
+```
+
+### Step 1: Parameter estimation
+
+Effectively just translated the pseudocode from Jurafasky and Martin.
+
+### Step 2: Classification
+
+The simple classifier from task 1 gives an accuracy of $A = 0.5899999737739563$ for the data used in the tester.
+
+The unsmoothed classification gave an accuracy of $A = 0.5149999856948853$. This is only just better than random, so something is definitely wrong. It is also much worse than the accuracy of the simple classifier used in task 1.
+
+### Step 3: Smoothing
+
+The issue with the unsmoothed classifier, is that some of the log probabilities calculated for words are $0$, so when these words show up in a text, they overshadow whatever other words are in the text, and the final probability for that class will just be zero.
+
+After applying smoothing, the accuracy is now $A = 0.7749999761581421$. This is much better than the unsmoothed value, but also much better than the simple classifier used for task 1.
+
+## Task 3:
+
+```sh
+javac -d out/ -cp src/stanford-postagger.jar:src/javafx/javafx.base.jar:src/javafx/javafx.controls.jar:src/javafx/javafx.base.jar src/uk/ac/cam/cl/erm67/exercises/*.java src/uk/ac/cam/cl/mlrd/exercises/sentiment_detection/*.java src/uk/ac/cam/cl/mlrd/testing/*.java src/uk/ac/cam/cl/mlrd/utils/*.java
+```
