@@ -95,8 +95,87 @@ The issue with the unsmoothed classifier, is that some of the log probabilities 
 
 After applying smoothing, the accuracy is now $A = 0.7749999761581421$. This is much better than the unsmoothed value, but also much better than the simple classifier used for task 1.
 
-## Task 3:
+## Task 3: Statistical laws of language
 
-```sh
-javac -d out/ -cp src/stanford-postagger.jar:src/javafx/javafx.base.jar:src/javafx/javafx.controls.jar:src/javafx/javafx.base.jar src/uk/ac/cam/cl/erm67/exercises/*.java src/uk/ac/cam/cl/mlrd/exercises/sentiment_detection/*.java src/uk/ac/cam/cl/mlrd/testing/*.java src/uk/ac/cam/cl/mlrd/utils/*.java
-```
+Switched to using IntelliJ instead of running commands from the terminal.
+
+### Step 1: Zipf's law
+
+Frequency vs. rank for the 10,000 highest-ranked words:
+
+![frequency](notesImages/frequency.png)
+
+The words I chose in task 1 had the following rankings:
+
+| word          | rank | frequency |
+| ------------- | ---- | --------- |
+| better        | 140  | 10925     |
+| excellent     | 283  | 4723      |
+| unique        | 857  | 1353      |
+| annoying      | 1040 | 1089      |
+| popcorn       | 2886 | 326       |
+| dry           | 2941 | 320       |
+| uncomfortable | 3114 | 298       |
+| spoiled       | 3678 | 241       |
+| profanity     | 4737 | 170       |
+| mistaken      | 5672 | 134       |
+
+The frequencies of these words on the ranking graph:
+
+![frequency2](notesImages/frequency2.png)
+
+They mostly appear in the lower frequency section, but without being ranked *too* low. About average really.
+
+The frequencies plotted on a log-log scale:
+
+![logFrequency](notesImages/logFrequency.png)
+
+Now with a line of best fit, weighted by frequency:
+
+![bestFitLine](notesImages/bestFitLine.png)
+
+The parameters for this line of best fit $y = mx + c$ are $m = -1.04, c = 14.3$. So,
+
+$$
+\ln{y} = m \ln{x} + c \\
+y = e^{m\ln{x} + c} \\
+y = e^c x^m \\
+y = e^{14.3} x^{-1.04} \\
+y = \frac{1.56 \times 10^6}{x^{1.04}} \\
+\therefore f(r) = \frac{1.56 \times 10^6}{r^{1.04}}
+$$
+
+Using this formula with the words from task 1:
+
+| word          | rank | predicted frequency | actual frequency |
+| ------------- | ---- | ------------------- | ---------------- |
+| better        | 140  | 9290                | 10925            |
+| excellent     | 283  | 4474                | 4723             |
+| unique        | 857  | 1417                | 1353             |
+| annoying      | 1040 | 1158                | 1089             |
+| popcorn       | 2886 | 402                 | 326              |
+| dry           | 2941 | 394                 | 320              |
+| uncomfortable | 3114 | 371                 | 298              |
+| spoiled       | 3678 | 312                 | 241              |
+| profanity     | 4737 | 240                 | 170              |
+| mistaken      | 5672 | 199                 | 134              |
+
+This is pretty good actually.
+
+### Step 2: Heaps' law
+
+Plotting the number of unique words in a given number of tokens on a log-log scale gives this graph:
+
+![uniqueWords](notesImages/uniqueWords.png)
+
+The line is ascending with a slight downward curve, implying a fairly high value for $\beta$, maybe $0.9$ or something.
+
+## Task 4: Statistical Testing
+
+### Step 1: Magnitude classifier
+
+### Step 2: Sign test
+
+### Step 3: Test your classifiers
+
+### Additional questions

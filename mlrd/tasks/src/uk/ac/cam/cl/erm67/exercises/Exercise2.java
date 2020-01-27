@@ -22,8 +22,8 @@ public class Exercise2 implements IExercise2
 
     public Map<Sentiment, Double> calculateClassProbabilities(Map<Path, Sentiment> trainingSet) throws IOException
     {
-        Double nPos = new Double(Collections.frequency(trainingSet.values(), Sentiment.POSITIVE));
-        Double nNeg = new Double(Collections.frequency(trainingSet.values(), Sentiment.NEGATIVE));
+        Double nPos = (double) Collections.frequency(trainingSet.values(), Sentiment.POSITIVE);
+        Double nNeg = (double) Collections.frequency(trainingSet.values(), Sentiment.NEGATIVE);
         Double nTotal = nPos + nNeg;
 
         HashMap<Sentiment, Double> classProbs = new HashMap<Sentiment, Double>();
@@ -34,8 +34,8 @@ public class Exercise2 implements IExercise2
 
     public Map<String, Map<Sentiment, Double>> calculateUnsmoothedLogProbs(Map<Path, Sentiment> trainingSet) throws IOException
     {
-        Double nPositiveWords = new Double(0);
-        Double nNegativeWords = new Double(0);
+        Double nPositiveWords = (double) 0;
+        Double nNegativeWords = (double) 0;
         HashMap<String, Double> positiveCounts = new HashMap<String, Double>();
         HashMap<String, Double> negativeCounts = new HashMap<String, Double>();
 
@@ -44,8 +44,8 @@ public class Exercise2 implements IExercise2
             List<String> tokens = Tokenizer.tokenize(entry.getKey());
 
             for (String s : tokens) {
-                positiveCounts.putIfAbsent(s, new Double(0));
-                negativeCounts.putIfAbsent(s, new Double(0));
+                positiveCounts.putIfAbsent(s, (double) 0);
+                negativeCounts.putIfAbsent(s, (double) 0);
                 if (entry.getValue() == Sentiment.POSITIVE)
                 {
                     nPositiveWords += 1;
@@ -81,8 +81,8 @@ public class Exercise2 implements IExercise2
 
     public Map<String, Map<Sentiment, Double>> calculateSmoothedLogProbs(Map<Path, Sentiment> trainingSet) throws IOException
     {
-        Double nPositiveWords = new Double(0);
-        Double nNegativeWords = new Double(0);
+        Double nPositiveWords = (double) 0;
+        Double nNegativeWords = (double) 0;
         HashMap<String, Double> positiveCounts = new HashMap<String, Double>();
         HashMap<String, Double> negativeCounts = new HashMap<String, Double>();
 
@@ -91,8 +91,8 @@ public class Exercise2 implements IExercise2
             List<String> tokens = Tokenizer.tokenize(entry.getKey());
 
             for (String s : tokens) {
-                positiveCounts.putIfAbsent(s, new Double(0));
-                negativeCounts.putIfAbsent(s, new Double(0));
+                positiveCounts.putIfAbsent(s, (double) 0);
+                negativeCounts.putIfAbsent(s, (double) 0);
                 if (entry.getValue() == Sentiment.POSITIVE)
                 {
                     nPositiveWords += 1;
