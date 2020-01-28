@@ -5,9 +5,9 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 //TODO: Replace with your package.
-import uk.ac.cam.cl.emm68.exercises.Exercise1;
-import uk.ac.cam.cl.emm68.exercises.Exercise2;
-import uk.ac.cam.cl.emm68.exercises.Exercise4;
+import uk.ac.cam.cl.erm67.exercises.Exercise1;
+import uk.ac.cam.cl.erm67.exercises.Exercise2;
+import uk.ac.cam.cl.erm67.exercises.Exercise4;
 import uk.ac.cam.cl.mlrd.exercises.sentiment_detection.DataPreparation1;
 import uk.ac.cam.cl.mlrd.exercises.sentiment_detection.IExercise1;
 import uk.ac.cam.cl.mlrd.exercises.sentiment_detection.IExercise2;

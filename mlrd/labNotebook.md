@@ -174,8 +174,18 @@ The line is ascending with a slight downward curve, implying a fairly high value
 
 ### Step 1: Magnitude classifier
 
+Reused the weighting function I made for task 1, only fixing the weighting at 2.
+
 ### Step 2: Sign test
+
+Rounding up the number of `Null`s added to our `Plus` and `Minus` counts gives us a stricter test, since there are more data points than if we rounded down.
+
+Using the `BigInteger` and `BigDecimal` classes made the code fairly unreadable, so I made several helper functions to encapsulate some tasks.
 
 ### Step 3: Test your classifiers
 
+The significance of the difference between the results for the Magnitude and the Simple classifiers is $p =0.6722499772048186$, which is not statistically significant at the $5\%$ level, however between the Magnitude and Naive Bayes classifiers, the significance was $p=0.04003719161339948$, which is statistically significant at this level.
+
 ### Additional questions
+
+Reducing the number of samples increases the p-value, since a broader range of scores is more likely on a smaller test set.
