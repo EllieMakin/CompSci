@@ -189,3 +189,17 @@ The significance of the difference between the results for the Magnitude and the
 ### Additional questions
 
 Reducing the number of samples increases the p-value, since a broader range of scores is more likely on a smaller test set.
+
+## Task 5: Cross-validation and test sets
+
+### Step 1: Data split
+
+I made sure that each of the folds was the same size by checking if it was the correct size, and if it was then I tried assigning it to the next fold instead.
+
+### Step 2: Cross-validation
+
+### Step 3: Evaluation on held-out data
+
+### Step 4: The Wayne Rooney effect
+
+### Step 5 (not part of tester)

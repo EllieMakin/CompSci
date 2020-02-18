@@ -34,8 +34,8 @@ public class Exercise2 implements IExercise2
 
     public Map<String, Map<Sentiment, Double>> calculateUnsmoothedLogProbs(Map<Path, Sentiment> trainingSet) throws IOException
     {
-        Double nPositiveWords = (double) 0;
-        Double nNegativeWords = (double) 0;
+        double nPositiveWords = (double) 0;
+        double nNegativeWords = (double) 0;
         HashMap<String, Double> positiveCounts = new HashMap<String, Double>();
         HashMap<String, Double> negativeCounts = new HashMap<String, Double>();
 
@@ -81,8 +81,8 @@ public class Exercise2 implements IExercise2
 
     public Map<String, Map<Sentiment, Double>> calculateSmoothedLogProbs(Map<Path, Sentiment> trainingSet) throws IOException
     {
-        Double nPositiveWords = (double) 0;
-        Double nNegativeWords = (double) 0;
+        double nPositiveWords = (double) 0;
+        double nNegativeWords = (double) 0;
         HashMap<String, Double> positiveCounts = new HashMap<String, Double>();
         HashMap<String, Double> negativeCounts = new HashMap<String, Double>();
 
@@ -114,8 +114,8 @@ public class Exercise2 implements IExercise2
 
             Double posCount = count.getValue();
             Double negCount = negativeCounts.get(count.getKey());
-            Double posDenominator = nPositiveWords + positiveCounts.size();
-            Double negDenominator = nNegativeWords + negativeCounts.size();
+            double posDenominator = nPositiveWords + positiveCounts.size();
+            double negDenominator = nNegativeWords + negativeCounts.size();
 
             sentimentMap.put(Sentiment.POSITIVE, Math.log((posCount + 1)/posDenominator));
             sentimentMap.put(Sentiment.NEGATIVE, Math.log((negCount + 1)/negDenominator));
@@ -134,7 +134,7 @@ public class Exercise2 implements IExercise2
 
         for (Path p : testArray) {
             List<String> tokens = Tokenizer.tokenize(p);
-            double posRating = Math.log( classProbabilities.get(Sentiment.POSITIVE));
+            double posRating = Math.log(classProbabilities.get(Sentiment.POSITIVE));
             double negRating = Math.log(classProbabilities.get(Sentiment.NEGATIVE));
 
             for (String s : tokens) {

@@ -36,7 +36,7 @@ public class Exercise1 implements IExercise1
                 String intensity = params[1].split("=")[1];
                 String polarity = params[2].split("=")[1];
 
-                Integer increment = polarity.equals("positive") ? 1 : -1;
+                int increment = polarity.equals("positive") ? 1 : -1;
 
                 increment *= intensity.equals("strong") ? weight : 1;
 
@@ -44,7 +44,6 @@ public class Exercise1 implements IExercise1
 
                 line = reader.readLine();
             }
-            reader.close();
         }
         catch (IOException e)
         {

@@ -7,7 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="stanford-postagger" level="project" />
+    <orderEntry type="library" name="stanford-postagger1" level="project" />
     <orderEntry type="library" name="javafx" level="project" />
+    <orderEntry type="library" name="stanford-postagger" level="project" />
+    <orderEntry type="library" name="javafx1" level="project" />
   </component>
 </module>
