@@ -39,6 +39,7 @@ public class Exercise5Tester {
 		System.out.println("CV score for folds split randomly: ");
 		System.out.println("Average:" + randomScore);
 		System.out.println("Variance:" + randomVar);
+        System.out.println();
 
 		List<Map<Path, Sentiment>> randomStratFolds = implementation.splitCVStratifiedRandom(dataSet, seed);
 		double[] stratScores = implementation.crossValidate(randomStratFolds);
@@ -47,6 +48,7 @@ public class Exercise5Tester {
 		System.out.println("CV score for stratified random folds: ");
 		System.out.println("Average:" + stratScore);
 		System.out.println("Variance:" + stratVar);
+        System.out.println();
 
 		Path oldSentFile = testDirectory.resolve("test_sentiment");
 		Map<Path, Sentiment> testSet = DataPreparation1.loadSentimentDataset(testDirectory.resolve("reviews"),
@@ -73,5 +75,21 @@ public class Exercise5Tester {
 		System.out.println(newAccuracy);
 		System.out.println();
 
+
+        IExercise1 ex1 = new Exercise1();
+        Path lexiconFile = Paths.get("data/sentiment_lexicon");
+        testPredictions = ex1.simpleClassifier(testSet.keySet(), lexiconFile);
+        newPredictions = ex1.simpleClassifier(newTestSet.keySet(), lexiconFile);
+
+        oldAccuracy = ex1.calculateAccuracy(testSet, testPredictions);
+        newAccuracy = ex1.calculateAccuracy(newTestSet, newPredictions);
+
+        System.out.println("Simple classifier accuracy on the original test set:");
+        System.out.println(oldAccuracy);
+        System.out.println();
+
+        System.out.println("Simple classifier accuracy on the 2016 test set:");
+        System.out.println(newAccuracy);
+        System.out.println();
 	}
 }

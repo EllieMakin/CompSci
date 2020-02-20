@@ -1,8 +1,10 @@
 # Machine Learning and Real World Data (Lab Notebook)
 
-## Task 1: Simple Classifier
+## Topic 1: Sentiment Detection
 
-### Part 1: Manual Classification
+### Task 1: Simple Classifier
+
+#### Part 1: Manual Classification
 
 | Review | Sentiment |
 | ------ | --------- |
@@ -11,7 +13,7 @@
 | 3      | Negative  |
 | 4      | Positive  |
 
-### Part 2: Sentiment Lexicon Database
+#### Part 2: Sentiment Lexicon Database
 
 The entries for *excellent* and *boring* in the given lexicon show that the exntries are structured with a polarity of either positive or negative, and with an intensity value as well.
 
@@ -32,9 +34,9 @@ Words I think will indicate sentiment:
 
 A lot of the words I've chosen are listed with the same sentiment in the given lexicon, but some are not listed. I mostly agree with the sentiments given in the lexicon.
 
-### Part 3: Simple Classifier Virtual programming lab
+#### Part 3: Simple Classifier Virtual programming lab
 
-#### Setup
+##### Setup
 I've named the package `uk.ac.cam.cl.erm67.exercises` for this task. In order to compile my code, I run the following command from my parent `tasks` folder:
 
 ```sh
@@ -47,15 +49,15 @@ Then I can run the tests with
 java -cp src/stanford-postagger.jar:out uk.ac.cam.cl.mlrd.testing.Exercise1Tester
 ```
 
-#### Classification
+##### Classification
 
 I used a `HashMap` to map each token onto their respective increments (positive or negative) when rating each review. The sum of the increments is calculated for each review; if it is positive, then the review is positive, and vice versa. I initially tried creating a list of objects that stored `word, intensity, polarity` for each word, but this was slow given the length of the lexicon.
 
-#### Evaluation
+##### Evaluation
 
 The evaluation of this initial approach gives accuracy $A = 0.6349999904632568$, which is not amazing, but not bad either.
 
-#### Improvements
+##### Improvements
 
 I initially added some code that would allow me to use weights based on the `intensity` value in the lexicon, so stronger tokens would produce larger changes to the rating. Specifically, `weak` tokens remained at a change of 1, and `strong` tokens gave a change of $k$, which I found gave the best accuracy at about $k = 10$. This improved the accuracy to $A = 0.6672222018241882$.
 
@@ -63,9 +65,9 @@ I then tried changing the boundary between positive and negative reviews, so whe
 
 Even with these improvements, the accuracy is not very impressive.
 
-## Task 2: Naive Bayes Classifier
+### Task 2: Naive Bayes Classifier
 
-### Step 0: Data preparation
+#### Step 0: Data preparation
 
 Compile the code with
 
@@ -79,27 +81,27 @@ Then run the tests with
 java -cp src/stanford-postagger.jar:out uk.ac.cam.cl.mlrd.testing.Exercise2Tester
 ```
 
-### Step 1: Parameter estimation
+#### Step 1: Parameter estimation
 
 Effectively just translated the pseudocode from Jurafasky and Martin.
 
-### Step 2: Classification
+#### Step 2: Classification
 
 The simple classifier from task 1 gives an accuracy of $A = 0.5899999737739563$ for the data used in the tester.
 
 The unsmoothed classification gave an accuracy of $A = 0.5149999856948853$. This is only just better than random, so something is definitely wrong. It is also much worse than the accuracy of the simple classifier used in task 1.
 
-### Step 3: Smoothing
+#### Step 3: Smoothing
 
 The issue with the unsmoothed classifier, is that some of the log probabilities calculated for words are $0$, so when these words show up in a text, they overshadow whatever other words are in the text, and the final probability for that class will just be zero.
 
 After applying smoothing, the accuracy is now $A = 0.7749999761581421$. This is much better than the unsmoothed value, but also much better than the simple classifier used for task 1.
 
-## Task 3: Statistical laws of language
+### Task 3: Statistical laws of language
 
 Switched to using IntelliJ instead of running commands from the terminal.
 
-### Step 1: Zipf's law
+#### Step 1: Zipf's law
 
 Frequency vs. rank for the 10,000 highest-ranked words:
 
@@ -162,7 +164,7 @@ Using this formula with the words from task 1:
 
 This is pretty good actually.
 
-### Step 2: Heaps' law
+#### Step 2: Heaps' law
 
 Plotting the number of unique words in a given number of tokens on a log-log scale gives this graph:
 
@@ -170,36 +172,93 @@ Plotting the number of unique words in a given number of tokens on a log-log sca
 
 The line is ascending with a slight downward curve, implying a fairly high value for $\beta$, maybe $0.9$ or something.
 
-## Task 4: Statistical Testing
+### Task 4: Statistical Testing
 
-### Step 1: Magnitude classifier
+#### Step 1: Magnitude classifier
 
 Reused the weighting function I made for task 1, only fixing the weighting at 2.
 
-### Step 2: Sign test
+#### Step 2: Sign test
 
 Rounding up the number of `Null`s added to our `Plus` and `Minus` counts gives us a stricter test, since there are more data points than if we rounded down.
 
 Using the `BigInteger` and `BigDecimal` classes made the code fairly unreadable, so I made several helper functions to encapsulate some tasks.
 
-### Step 3: Test your classifiers
+#### Step 3: Test your classifiers
 
 The significance of the difference between the results for the Magnitude and the Simple classifiers is $p =0.6722499772048186$, which is not statistically significant at the $5\%$ level, however between the Magnitude and Naive Bayes classifiers, the significance was $p=0.04003719161339948$, which is statistically significant at this level.
 
-### Additional questions
+#### Additional questions
 
 Reducing the number of samples increases the p-value, since a broader range of scores is more likely on a smaller test set.
 
-## Task 5: Cross-validation and test sets
+### Task 5: Cross-validation and test sets
 
-### Step 1: Data split
+#### Step 1: Data split
 
 I made sure that each of the folds was the same size by checking if it was the correct size, and if it was then I tried assigning it to the next fold instead.
 
-### Step 2: Cross-validation
+For stratified random, I used the same process, but keeping track of the amount of positive and negative reviews individually.
 
-### Step 3: Evaluation on held-out data
+#### Step 2: Cross-validation
 
-### Step 4: The Wayne Rooney effect
+The cross-validation scores for the two methods of splitting the data were almost identical, at $0.82$ with some rounding errors.
 
-### Step 5 (not part of tester)
+The variance for the stratified random method was slightly lower.
+
+#### Step 3: Evaluation on held-out data
+
+The cross-validation accuracy of the classifier on the held-out test set was $0.83$.
+
+#### Step 4: The Wayne Rooney effect
+
+The system trained on the data from 2004 performs worse on the 2016 data, giving a cross-validation accuracy of $0.73$.
+
+#### Step 5 (not part of tester)
+
+When run on the held-out data, the simple classifier from task 1 gives an accuracy of $0.615$, which is worse than the $0.83$ from the naive bayes classifier. However, the simple classifier gives an accuracy of $0.700$ on the 2016 data, which is still worse than the naive bayes classifier, but it is an improvement on its score from the 2004 data.
+
+The simple classifier is likely to be more consistent over time, since it uses general properties of language, rather than those specifically from one point in time.
+
+### Task 6: Uncertainty and human agreement
+
+#### Step 1: Nuanced classifier
+
+I think the task is made easier by the introduction of the neutral category, since many reviews are hard to judge, as is the case with review 6220.
+
+The accuracy of the new nuanced classifier is $0.582$, which is lower than it was for the binary classifier.
+
+#### Step 2: Human agreement
+
+My predictions broadly aligned with the predictions of the whole group.
+
+#### Step 3: $\kappa$
+
+Overall kappa value:
+$0.6520918950518719$
+
+Kappa value for reviews 1 and 2:
+$0.3459080601937744$
+
+Kappa value for reviews 3 and 4:
+$0.9257192001425383$
+
+## Topic 2: Hidden Markov Models
+
+### Task 7: Training the HMM
+
+Any of the probabilities for `x -> start`, or `end -> x` will be 0.
+
+### Task 8: Viterbi algorithm
+
+#### Step 1: Viterbi
+
+We use logarithms again when dealing with very small probablities, so that the numbers are more reasonable and precise.
+
+The most likely sequence of states is the same as the sequence of most likely states, since the latter is derived by constructing the former.
+
+#### Step 2: Evaluation
+
+With 10-fold cross-validation, the algorithm gives an average F1-measure of $0.86$.
+
+### Task 9: Biological applications
