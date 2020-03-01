@@ -262,3 +262,33 @@ The most likely sequence of states is the same as the sequence of most likely st
 With 10-fold cross-validation, the algorithm gives an average F1-measure of $0.86$.
 
 ### Task 9: Biological applications
+
+Varying the random seed for the train-dev-split tester gives F1 scores ranging from about $0.73$ to $0.80$. This is a broad range, so cross-validation is required.
+
+Using cross validation, we get an average F1 score of $0.76$.
+
+## Topic 3: Social Networks
+
+### Task 10: Properties of Networks
+
+#### Step 1: Graph visualisation
+
+The graph, when initially arranged, looks like this:
+
+![simpleNetwork1](notesImages/simpleNetwork1.png)
+
+When the Network Diameter statistic is run, we get 8 as expected. The average degree is $43.7$. After setting the size and colour to depend on degree and betweenness centrality respectively, the graph looks like this:
+
+![simpleNetwork2](notesImages/simpleNetwork2.png)
+
+Corresponding to Facebook friend data, this arrangement is fairly unsurprising, with obvious mutual friend groups forming, and certain individuals who are friends with many people from different groups.
+
+#### Step 2: Get degree of all nodes
+
+This is fairly simple, just iterate through each node in the adacency matrix and count the number of entries for each.
+
+#### Step 3: Find diameter.
+
+Used Dijkstra's algorithm on each node, to give the shortest paths to each of the other nodes, and then found the maximum of each of those. Not very fast, but it works.
+
+### Task 11: Betweenness

@@ -113,8 +113,8 @@ public class Exercise8 implements IExercise8
     }
 
     @Override
-    public double recall(Map<List<DiceType>, List<DiceType>> true2PredictedMap) {
-
+    public double recall(Map<List<DiceType>, List<DiceType>> true2PredictedMap)
+    {
         double nLTrue = 0;
         double nLCorrect = 0;
 

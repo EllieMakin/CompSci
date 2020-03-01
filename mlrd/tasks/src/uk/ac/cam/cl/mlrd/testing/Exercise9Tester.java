@@ -5,22 +5,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 //TODO: Replace with your package.
-import uk.ac.cam.cl.emm68.exercises.Exercise9;
-import uk.ac.cam.cl.mlrd.exercises.markov_models.AminoAcid;
-import uk.ac.cam.cl.mlrd.exercises.markov_models.Feature;
-import uk.ac.cam.cl.mlrd.exercises.markov_models.HMMDataStore;
-import uk.ac.cam.cl.mlrd.exercises.markov_models.HiddenMarkovModel;
-import uk.ac.cam.cl.mlrd.exercises.markov_models.IExercise9;
+import uk.ac.cam.cl.erm67.exercises.Exercise5;
+import uk.ac.cam.cl.erm67.exercises.Exercise7;
+import uk.ac.cam.cl.erm67.exercises.Exercise8;
+import uk.ac.cam.cl.erm67.exercises.Exercise9;
+import uk.ac.cam.cl.mlrd.exercises.markov_models.*;
+import uk.ac.cam.cl.mlrd.exercises.sentiment_detection.IExercise5;
 
 public class Exercise9Tester {
 
@@ -74,5 +70,34 @@ public class Exercise9Tester {
 		System.out.println("Prediction F1 score:");
 		System.out.println(f1Score);
 		System.out.println();
+
+        int nFolds = 10;
+        int nFiles = sequencePairs.size();
+        double[] scores = new double[nFolds];
+
+        for (int jTestFold = 0; jTestFold < nFolds; jTestFold++)
+        {
+            List<HMMDataStore<AminoAcid, Feature>> testingSet = sequencePairs.subList(nFiles*jTestFold/nFolds, nFiles*(jTestFold+1)/nFolds);
+            List<HMMDataStore<AminoAcid, Feature>> trainSet = new ArrayList<>();
+            trainSet.addAll(sequencePairs.subList(0, nFiles*jTestFold/nFolds));
+            trainSet.addAll(sequencePairs.subList(nFiles*(jTestFold+1)/nFolds, nFiles));
+
+            IExercise9 ex9 = new Exercise9();
+
+            HiddenMarkovModel<AminoAcid, Feature> HMM = ex9.estimateHMM(trainSet);
+            Map<List<Feature>, List<Feature>> trueToPredictedMap = ex9.predictAll(HMM, testingSet);
+            scores[jTestFold] = ex9.fOneMeasure(trueToPredictedMap);
+        }
+
+        IExercise5 ex5 = new Exercise5();
+        System.out.println("Cross-validation scores:");
+        System.out.println(Arrays.toString(scores));
+        System.out.println();
+        System.out.println("Cross-validation average:");
+        System.out.println(ex5.cvAccuracy(scores));
+        System.out.println();
+        System.out.println("Cross-validation variance:");
+        System.out.println(ex5.cvVariance(scores));
+        System.out.println();
 	}
 }
