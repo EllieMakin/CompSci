@@ -292,3 +292,5 @@ This is fairly simple, just iterate through each node in the adacency matrix and
 Used Dijkstra's algorithm on each node, to give the shortest paths to each of the other nodes, and then found the maximum of each of those. Not very fast, but it works.
 
 ### Task 11: Betweenness
+
+The distribution of betweenness centralities produced by the algorithm has a few very high scoring nodes, with scores quickly decreasing from there. This should give good splitting points for clique finding, namely the few very high scoring nodes.
