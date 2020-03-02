@@ -294,3 +294,7 @@ Used Dijkstra's algorithm on each node, to give the shortest paths to each of th
 ### Task 11: Betweenness
 
 The distribution of betweenness centralities produced by the algorithm has a few very high scoring nodes, with scores quickly decreasing from there. This should give good splitting points for clique finding, namely the few very high scoring nodes.
+
+### Task 12: Clustering
+
+Basically just used standard depth-first search, and copied the betweenness code from task 11. Finished!
