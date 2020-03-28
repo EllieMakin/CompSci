@@ -84,8 +84,6 @@ can be estimated from a labelled sample of text. Describe one way how this can b
 
 **Viterbi is a clever algorithm that allows you to process the input in time that is linear to the observation sequence. With a first order HMM, we keep N (number of states) maximum probabilities per observation at each step.**
 
-1. How many states do we need to keep for an N
-
-    order HMM?
+1. How many states do we need to keep for an N order HMM?
 
 2. What are the implications for the asymptotic complexity of Viterbi?
