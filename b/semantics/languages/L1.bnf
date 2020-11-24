@@ -1,0 +1,14 @@
+<boolean>    ::= true | false
+<integer>    ::= 0 | 1 | -1 | 2 | -2 | ...
+<location>   ::= l0 | l1 | l2 | ...
+<operation>  ::= + | >=
+<skip>       ::= skip
+
+<expression> ::= <expr_val> | <expr_op> | <expr_seq> | <expr_asgn> | <expr_deref> | <expr_if> | <expr_while> 
+<expr_val>   ::= <integer> | <boolean> | <skip>
+<expr_op>    ::= <expression> <operation> <expression>
+<expr_seq>   ::= <expression>; <expression>
+<expr_asgn>  ::= <location> := <expression>
+<expr_deref> ::= !<location>
+<expr_if>    ::= if <expression> then <expression> else <expression>
+<expr_while> ::= while <expression> do <expression>

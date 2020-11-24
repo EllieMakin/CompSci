@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
+#include <unistd.h> 
+#include <stdlib.h> // malloc, free
+#include <pthread.h> // pthread_create, pthread_join
 
 #define NUMTHREADS 4
 
@@ -17,7 +17,7 @@ void main(void) {
     int i;
     for (i = 0; i < NUMTHREADS; i++)
     {
-        int* arg = malloc(sizeof(*arg));
+        int *arg = malloc(sizeof(*arg));
         *arg = i;
         pthread_create(
             &threads[i],

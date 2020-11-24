@@ -1,24 +1,32 @@
-#include <stdio.h>
-#include <inttypes.h>
+#include<stdio.h>
 
-typedef struct s {
-    union {
-        int32_t i;
-        float f;
-    } data32;
-    union {
-        int64_t i;
-        double d;
-    } data64;
-} S;
+#define init_employee(X,Y) {(X),(Y),wage_emp}
+#define init_manager(X,Y,Z) {(X),(Y),wage_man,(Z)}
 
-int main()
-{
-    S s_int = { 204648531, 18436744072709551614 };
-    printf("f: %f, d: %f\n", s_int.data32.f, s_int.data64.d);
-    
-    S s_float = { 1122.340163525, 44555666777888.9990121 };
-    printf("i32: %d, i64: %ld\n", s_float.data32.i, s_float.data64.i);
+typedef struct Employee Em;
+struct Employee {
+    int hours,salary;
+    int (*wage)(Em*);
+};
 
+int wage_emp(Em *ths) {
+    return ths->hours * ths->salary;
+}
+
+typedef struct Manager Mn;
+struct Manager {
+    int hours,salary;
+    int (*wage)(Mn*);
+    int bonus;
+};
+
+int wage_man(Mn *ths) {
+    return ths->hours * ths->salary + ths->bonus;
+}
+
+int main(void) {
+    Mn m = init_manager(40,10,20);
+    Em *e= (Em *) &m;
+    printf("%d\n",e->wage(e));
     return 0;
 }
