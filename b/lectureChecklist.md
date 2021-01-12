@@ -76,8 +76,8 @@
 7.  [x] Isolation 2PL TSO OCC
 8.  [x] Durability, Recovery
 9.  [x] Distributed systems introduction
-10. [ ] Two generals problem
-11. [ ] Physical time
+10. [x] Two generals problem
+11. [x] Physical time
 12. [ ] Logical time
 13. [ ] Replication
 14. [ ] Consensus
@@ -100,7 +100,7 @@
 2.  [x] Lecture 2
 3.  [x] Lecture 3
 4.  [x] Lecture 4
-5.  [ ] Lecture 5
+5.  [x] Lecture 5
 6.  [ ] Lecture 6
 7.  [ ] Lecture 7
 8.  [ ] Lecture 8
@@ -108,3 +108,47 @@
 10. [ ] Lecture 10
 11. [ ] Lecture 11
 12. [ ] Lecture 12
+
+#### Unix tools
+
+1.  [ ] Introduction and prerequisites
+2.  [ ] Unix history and free software
+3.  [ ] Terminals
+4.  [ ] Documentation
+5.  [ ] Shell concepts
+6.  [ ] File-descriptor redirect
+7.  [ ] Command-line argument conventions
+8.  [ ] Command-line argument preprocessing
+9.  [ ] Job control
+10. [ ] Shell and environment variables
+11. [ ] Scripts and plain-text files
+12. [ ] Compound commands
+13. [ ] Typing shortcuts
+14. [ ] Startup scripts
+15. [ ] sed stream editor
+16. [ ] grep, head, tail, sort, ispell
+17. [ ] File and network tools
+18. [ ] Diff and patch
+19. [ ] RCS revision control system
+20. [ ] Subversion introduction
+21. [ ] Subversion commands
+22. [ ] Subversion example
+23. [ ] Subversion remote access
+24. [ ] Git introduction
+25. [ ] Git branching commands
+25. [ ] Git first commit
+25. [ ] Git tags and gitk
+26. [ ] Git branching example
+27. [ ] Git merge conflict
+28. [ ] Git more commands
+29. [ ] Git in teams
+30. [ ] Git repo read access via HTTP
+31. [ ] Compiling and debugging C
+32. [ ] Make
+33. [ ] Perl introduction
+34. [ ] Perl data types
+35. [ ] Perl syntax
+36. [ ] Perl standard function examples
+37. [ ] Perl bits and bobs
+38. [ ] Perl examples
+39. [ ] Conclusions

@@ -1,0 +1,15 @@
+Ellie Makin (erm67)
+
+C/C++ Programming Exercise 2020/21
+
+Part 1
+
+1.
+
+`server.c` creates a server socket on a specified port number, which waits for a client to connect to it. This can then be connected to by `client.c`, specifying localhost and the same port number. `server.c` will then provide a specified file as payload over the connection, which will be recieved by client.c, and printed to stdout.
+
+2.
+
+- In `client.c`, on line 39, the buffer size is set to one less than the size of the data read into it on line 40, which will cause a buffer overflow.
+- In `server.c`, line 19 checks for `argc` to be 2 instead of 3.
+- Also in `server.c`, a closing curly brace is missing from the end of the file.

@@ -1,34 +1,33 @@
 #!/usr/bin/env python3
 
+import pandas
 import numpy as np
 import scipy.special
+import scipy.stats
 import matplotlib.pyplot as plt
+import sklearn.linear_model
 
-n = 10000
+url = "https://www.cl.cam.ac.uk/teaching/2021/DataSci/data/climate.csv"
+climate = pandas.read_csv(url)
+df = climate.loc[(climate.station=='Cambridge') & (climate.yyyy>=1985)]
+t = df.yyyy + (df.mm-1)/12
+temp = (df.tmin + df.tmax)/2
 
-def rxy():
-    eye_l = 0.05
-    eye_r = 0.10
-    mouth = 0.30
-    i = np.random.uniform()
-    if i < eye_l:
-        x, y = -0.3, 0.3
-    elif i < eye_r:
-        x, y = 0.3, 0.3
-    elif i < mouth:
-        theta = np.random.uniform(-5*np.pi/6, -np.pi/6)
-        x, y = 0.5*np.cos(theta), 0.5*np.sin(theta)
-    else:
-        theta = np.random.uniform(0, 2*np.pi)
-        x, y = np.cos(theta), np.sin(theta)
-    dx, dy = np.random.normal(loc=0, scale=0.05, size=2)
-    return (x+dx, y+dy)
+sigma = 10
 
-pairs = np.array([rxy() for i in range(n)])
-x, y = zip(*pairs)
+def temp(theta, t):
+    alpha, beta_1, beta_2, gamma = theta
+    return alpha + beta_1*np.sin(2*np.pi*t) + beta_2*np.cos(2*np.pi*t) + gamma*(t-2000)
 
-fig, axes = plt.subplots(2, 2, figsize=(6, 6))
-axes[0, 0].scatter(x, y, marker=',', s=1, alpha=0.1)
-axes[1, 0].hist(x, bins=100)
-axes[0, 1].hist(y, bins=100, orientation="horizontal")
+theta_sample = list(zip(*[
+    np.random.normal(loc=10, scale=5, size=1000),
+    np.random.normal(loc=0, scale=5, size=1000),
+    np.random.normal(loc=0, scale=5, size=1000),
+    np.random.normal(loc=0, scale=1, size=1000)
+]))
+w = [scipy.stats.norm.pdf(t, loc=temp(theta, t), scale=sigma) for theta in theta_sample]
+
+print(w)
+
+plt.hist([theta[3] for theta in theta_sample], weights=w, density=True)
 plt.show()

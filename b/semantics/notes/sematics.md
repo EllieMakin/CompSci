@@ -70,7 +70,7 @@ We will write $L_1$ for the set of all expressions.
 
 #### Transition Systems
 
-A transition system consists of a set $C$ of possible configurations for the system, and a binary relation $\longrightarrow \subseteq C \times C$. The notation $c \longrightarrow c'$ means that state $c$ can make a transition to state $c'$. We use a relation rather than a function here, since it may be the case that in a concurrent program, there are multiple possible successor states.
+A transition system consists of a set $C$ of possible configurations for the system, and a binary relation $(\longrightarrow) \subseteq C \times C$. The notation $c \longrightarrow c'$ means that state $c$ can make a transition to state $c'$. We use a relation rather than a function here, since it may be the case that in a concurrent program, there are multiple possible successor states.
 
 We will define a **store** $s$ to be a finite partial function from $\mathbb{L}$ to $\mathbb{Z}$, representing the variables which are currently assigned, e.g.
 $$
@@ -229,6 +229,16 @@ $$
 $$
 
 If the property we are trying to prove is about more than one expression, or includes a store variable, then we include all the requires variables for the property instead of just $e$, for example in the decidability property, we may have $\Phi(e, s, e', s', e'', s'')$.
+
+##### Concrete rule instances
+
+Before, when we spoke about reduction and typing rules, we only outlined the form they would take, without defining any concrete instances. We will do that now.
+
+For each rule, we can construct the set of all concrete rule instances by taking all values of the metavariables that satisfy the rule. For example, for reducing the addition of two integers, we take all $n_0, n_1, n, s$ that satisfy $\langle n_0 + n_1, s \rangle \longrightarrow \langle n, s \rangle$, and say that each of those form an instance of that rule.
+
+Now, a derivation of a transition, or typing judgement is a finite tree such that each step in the process is a concrete rule instance. Then, a transition or judgement is in their respective relation if and only if there is a derivation with it as the root node.
+
+We refer to the set of concrete rule instances as $A$.
 
 #### Principle of Rule Induction
 
